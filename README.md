@@ -8,3 +8,5 @@ This project will help Fullerton Funhouse make cool video games based on fun, cl
 StyleGuide:
 Linter: Choose a linter for code formatting, such as ESLint for JavaScript or ClangFormat for C++.
 Code Formatting Rules: Define any agreed-upon rules, like indentation style, variable naming conventions, and spacing.
+
+![UML Sequence Diagram for Blackjack](images/blackjack_sequence_diagram.png)
