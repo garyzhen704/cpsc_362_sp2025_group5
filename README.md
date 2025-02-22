@@ -8,7 +8,7 @@ This project is all about creating a fun and easy-to-play video game version of 
 Below is a UML sequence diagram that shows how the Blackjack game works. It explains the steps from dealing the cards to finding out who wins.
 
 ![UML Sequence Diagram for Blackjack](images/blackjack_sequence_diagram.png)
-*The diagram, titled "Gary Zhen: UML Sequence Diagram," depicts the following flow:*  
+
 - The Dealer deals one card face up to both the Player and themselves, followed by a second face-up card to the Player and a face-down card to themselves.  
 - The Player’s turn begins, where they can request additional cards (hit) until they choose to stand or bust (exceed a total of 21, resulting in a loss of their bet).  
 - If the Player stands, the Dealer reveals their hidden card and draws cards until their total is 17 or higher.  
@@ -21,5 +21,3 @@ Below is a UML sequence diagram that shows how the Blackjack game works. It expl
 - Use camelCase for naming variables and functions  
 - No spaces around parentheses in function calls and declarations  
 - One space after commas in arrays or objects  
-
-![UML Sequence Diagram for Blackjack](images/blackjack_sequence_diagram.png)
