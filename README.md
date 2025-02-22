@@ -7,6 +7,7 @@ This project is all about creating a fun and easy-to-play video game version of 
 
 Below is a UML sequence diagram that shows how the Blackjack game works. It explains the steps from dealing the cards to finding out who wins.
 
+*UML class diagram*
 ![UML Sequence Diagram for Blackjack](images/blackjack_sequence_diagram.png)
 
 - The Dealer deals one card face up to both the Player and themselves, followed by a second face-up card to the Player and a face-down card to themselves.  
