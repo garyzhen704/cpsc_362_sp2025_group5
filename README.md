@@ -16,7 +16,7 @@ Below is a UML sequence diagram that shows how the Blackjack game works. It expl
 - The game concludes with outcomes: if the Dealer busts (total > 21), remaining players win; if the Dealer’s total is 21 or higher, the Dealer wins. Postconditions state that card values are known, hands are dealt, and a winner is decided.
 
 ## StyleGuide:
-**Linter:** ESLint for JavaScript  
+**Linter:** Pylint for Python  
 **Code Formatting Rules:**  
 - Use 2 spaces for indentation  
 - Use camelCase for naming variables and functions  
