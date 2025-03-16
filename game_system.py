@@ -4,9 +4,10 @@ from dealer import Dealer
 from hand import Hand
 
 class GameSystem:
-    def __init__(self):
+    def __init__(self, num_players):
         self.deck = Deck()
-        self.players = [Player(), Dealer()]  # Player and Dealer
+        self.players = [Player() for _ in range(num_players)]
+        self.players.append(Dealer())  # Dealer is always last
 
     def startGame(self):
         self.deck = Deck()
@@ -19,8 +20,9 @@ class GameSystem:
             player.hit(self.deck.drawCard())
 
         # Deal second card (face up to player, face down to dealer)
-        self.players[0].hit(self.deck.drawCard())  # Player's second card
-        self.players[1].hit(self.deck.drawCard())  # Dealer's hidden card
+        for i, player in enumerate(self.players[:-1]):
+            player.hit(self.deck.drawCard())  # Players' second cards
+        self.players[-1].hit(self.deck.drawCard())  # Dealer's hidden card
 
     def processAction(self, player, action):
         if action == 'hit':
@@ -30,9 +32,9 @@ class GameSystem:
         elif action == 'doubleDown':
             player.doubleDown(self.deck.drawCard())
 
-    def determineWinner(self):
-        playerValue = self.players[0].hand.getValue()
-        dealerValue = self.players[1].hand.getValue()
+    def determineWinner(self, player_index):
+        playerValue = self.players[player_index].hand.getValue()
+        dealerValue = self.players[-1].hand.getValue()  # Dealer is last player
         if playerValue > 21:
             return "Dealer wins!"
         elif dealerValue > 21 or playerValue > dealerValue:
@@ -41,6 +43,5 @@ class GameSystem:
             return "Dealer wins!"
         else:
             return "It's a tie!"
-
     def dealerPlay(self):
-        self.players[1].play(self.deck)
+        self.players[-1].play(self.deck)
