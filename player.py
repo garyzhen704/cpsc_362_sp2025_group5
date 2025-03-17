@@ -4,6 +4,7 @@ class Player:
     def __init__(self, balance=100):
         self.balance = balance
         self.hand = Hand()
+        self.hand_2 = Hand()
         self.currentBet = 0
 
     def hit(self, card):
@@ -24,3 +25,8 @@ class Player:
             self.balance -= self.currentBet
             self.currentBet *= 2
         self.hand.addCard(card)
+
+    def split(self):
+        if self.hand.canSplit():
+            self.hand_2.addCard(self.hand.cards.pop())
+            
