@@ -17,20 +17,22 @@ class GameSystem:
 
         # Deal first card face up to all players
         for player in self.players:
-            player.hit(self.deck.drawCard())
+            player.hit(self.deck.drawCard(), player.hand)
 
         # Deal second card (face up to player, face down to dealer)
         for i, player in enumerate(self.players[:-1]):
-            player.hit(self.deck.drawCard())  # Players' second cards
-        self.players[-1].hit(self.deck.drawCard())  # Dealer's hidden card
+            player.hit(self.deck.drawCard(), player.hand)  # Players' second cards
+        self.players[-1].hit(self.deck.drawCard(), self.players[-1].hand)  # Dealer's hidden card
 
-    def processAction(self, player, action):
+    def processAction(self, player, action, hand_paramater):
         if action == 'hit':
-            player.hit(self.deck.drawCard())
+            player.hit(self.deck.drawCard(), hand_paramater)
         elif action == 'stand':
             player.stand()
         elif action == 'doubleDown':
-            player.doubleDown(self.deck.drawCard())
+            player.doubleDown(self.deck.drawCard(), hand_paramater)
+        elif action == 'split':
+            player.split(self.deck.drawCard(), self.deck.drawCard())
 
     def determineWinner(self, player_index):
         playerValue = self.players[player_index].hand.getValue()

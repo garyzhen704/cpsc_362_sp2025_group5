@@ -9,4 +9,4 @@ class Dealer(Player):
     def play(self, deck):
         # The dealer must hit until their hand value is at least 17 (Blackjack rules)
         while self.hand.getValue() < 17:
-            self.hit(deck.drawCard())
+            self.hit(deck.drawCard(), self.hand)

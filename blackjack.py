@@ -1,6 +1,7 @@
 from game_system import GameSystem
 
 def main():
+    evaluate_second_hand = False
     # Get number of players
     while True:
         try:
@@ -24,17 +25,57 @@ def main():
             print(f"Your hand value: {game.players[player_num].hand.getValue()}")
             # Player's turn
             while True:
-                action = input("\nWhat would you like to do? (hit/stand/double): ").lower()
-                if action in ['hit', 'stand', 'double']:
-                    game.processAction(game.players[player_num], action)
-                    print(f"Your hand: {game.players[player_num].hand.cards}")
-                    print(f"Your hand value: {game.players[player_num].hand.getValue()}")
+                if(evaluate_second_hand != True):
+                    if(game.players[player_num].canSplit() and game.players[player_num].canDoubleDown(game.players[player_num].hand)):
+                        action = input("\nWhat would you like to do? (hit/stand/double/split): ").lower()
+                    elif(game.players[player_num].canSplit() and not game.players[player_num].canDoubleDown(game.players[player_num].hand)):
+                        action = input("\nWhat would you like to do? (hit/stand/split): ").lower()
+                    elif(not game.players[player_num].canSplit() and game.players[player_num].canDoubleDown(game.players[player_num].hand)):
+                        action = input("\nWhat would you like to do? (hit/stand/double): ").lower()
+                    else:
+                        action = input("\nWhat would you like to do? (hit/stand): ").lower()
+                else:
+                    if(game.players[player_num].canSplit() and game.players[player_num].canDoubleDown(game.players[player_num].second_hand)):
+                        action = input("\nWhat would you like to do? (hit/stand/double/split): ").lower()
+                    elif(game.players[player_num].canSplit() and not game.players[player_num].canDoubleDown(game.players[player_num].second_hand)):
+                        action = input("\nWhat would you like to do? (hit/stand/split): ").lower()
+                    elif(not game.players[player_num].canSplit() and game.players[player_num].canDoubleDown(game.players[player_num].second_hand)):
+                        action = input("\nWhat would you like to do? (hit/stand/double): ").lower()
+                    else:
+                        action = input("\nWhat would you like to do? (hit/stand): ").lower()
+
+
+                if action in ['hit', 'stand', 'double', 'split']:
+                    if action in ['stand']:
+                        if(len(game.players[player_num].second_hand.cards) != 0 and evaluate_second_hand ==True):
+                            break
+                        elif(len(game.players[player_num].second_hand.cards) == 0):
+                            break
+                        evaluate_second_hand = True
+                    if(evaluate_second_hand == False):
+                        game.processAction(game.players[player_num], action, game.players[player_num].hand)
+                        print(f"Your hand: {game.players[player_num].hand.cards}")
+                        print(f"Your hand value: {game.players[player_num].hand.getValue()}")
+                    else:
+                        game.processAction(game.players[player_num], action, game.players[player_num].second_hand)
+                        print(f"Your second hand: {game.players[player_num].second_hand.cards}")
+                        print(f"Your second hand value: {game.players[player_num].second_hand.getValue()}")
 
                     if game.players[player_num].hand.isBust():
                         print("Bust!")
+                        
+                        if(len(game.players[player_num].second_hand.cards) == 0):
+                            break
+                        elif(len(game.players[player_num].second_hand.cards) != 0 and evaluate_second_hand == True):
+                            break
+                        if(len(game.players[player_num].second_hand.cards)!=0):
+                            evaluate_second_hand = True
+                        print(f"Your second hand: {game.players[player_num].second_hand.cards}")
+                        print(f"Your second hand value: {game.players[player_num].second_hand.getValue()}")
+                    if action in ['double']:
                         break
-                    if action in ['stand', 'double']:
-                        break
+
+                        
 
         # Dealer's turn
         game.dealerPlay()

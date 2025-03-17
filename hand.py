@@ -25,9 +25,6 @@ class Hand:
             value -= 10
             numAces -= 1
         return value
-    def canSplit(self):
-        if(len(self.cards) == 2 and self.cards[0].rank == self.cards[1].rank):
-            return True
     
     def clearHand(self):
         self.cards.clear()
