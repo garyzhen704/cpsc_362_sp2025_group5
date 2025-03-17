@@ -25,6 +25,17 @@ class Hand:
             value -= 10
             numAces -= 1
         return value
+    def canSplit(self):
+        if(len(self.cards) == 2 and self.cards[0].rank == self.cards[1].rank):
+            hand1 = Hand()
+            hand2 = Hand()
+            hand1.addCard(self.cards[0])
+            hand2.addCard(self.cards[1])
+        return hand1, hand2
+    
+    def clearHand(self):
+        self.cards.clear()
+
 
     def isBlackjack(self):
         return self.getValue() == 21 and len(self.cards) == 2
