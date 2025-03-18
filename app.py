@@ -1,0 +1,59 @@
+from flask import Flask, render_template, jsonify, request
+from game_system import GameSystem
+from card import Card
+
+app = Flask(__name__)
+
+# Initialize the game system
+game_system = GameSystem()
+
+@app.route('/')
+def index():
+    # Render the main HTML page
+    return render_template('index.html')
+
+@app.route('/start', methods=['POST'])
+def start_game():
+    # Start a new game
+    game_system.startGame()
+    player_hand = [card.to_dict() for card in game_system.players[0].hand.cards]
+    dealer_hand = [card.to_dict() for card in game_system.players[1].hand.cards]
+    return jsonify({
+        'player_hand': player_hand,
+        'dealer_hand': dealer_hand,
+        'deck': [card.to_dict() for card in game_system.deck.cards]
+    })
+    
+@app.route('/hit', methods=['POST'])
+def hit():
+    # Handle the player's "hit" action
+    data = request.json
+    game_system.deck.cards = [Card.from_dict(card) for card in data['deck']]
+    game_system.players[0].hand.cards = [Card.from_dict(card) for card in data['player_hand']]
+    game_system.processAction(game_system.players[0], 'hit')
+    player_hand = [card.to_dict() for card in game_system.players[0].hand.cards]
+    return jsonify({
+        'player_hand': player_hand,
+        'deck': [card.to_dict() for card in game_system.deck.cards],
+        'player_value': game_system.players[0].hand.getValue()
+    })
+
+@app.route('/stand', methods=['POST'])
+def stand():
+    # Handle the player's "stand" action
+    data = request.json 
+    game_system.deck.cards = [Card.from_dict(card) for card in data['deck']]
+    game_system.players[0].hand.cards = [Card.from_dict(card) for card in data['player_hand']]
+    game_system.players[1].hand.cards = [Card.from_dict(card) for card in data['dealer_hand']]
+    game_system.processAction(game_system.players[0], 'stand')
+    game_system.dealerPlay()
+    dealer_hand = [card.to_dict() for card in game_system.players[1].hand.cards]
+    return jsonify({
+        'dealer_hand': dealer_hand,
+        'dealer_value': game_system.players[1].hand.getValue(),
+        'player_value': game_system.players[0].hand.getValue(),
+        'result': game_system.determineWinner()
+    })
+
+if __name__ == '__main__':
+    app.run(debug=True)
