@@ -7,7 +7,8 @@ def index():
   return render_template('example.html')
 
 @app.rout('/game')
-def return render_title_screen('title.html')
+def game():
+  return render_template('title.html')
 
 if __name__ == '__main__':
   app.run(debug = True)
