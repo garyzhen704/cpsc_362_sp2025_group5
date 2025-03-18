@@ -11,4 +11,7 @@ class Deck:
         random.shuffle(self.cards)
 
     def drawCard(self):
+        if len(self.cards) == 0:
+            print("Deck is empty")  # Handle empty deck
+            return None 
         return self.cards.pop()

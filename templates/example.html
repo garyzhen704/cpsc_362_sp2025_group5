@@ -22,78 +22,80 @@ margin-bottom:100px;
 position:relative;
 }
 .poker_table{
-  display:block;
+  display:inline-block;
   height:100%;
   width:100%;
 }
-.card1{
-  height:140px;
-  width:100px;
+.dealer_hand{
+  height: 145px;
+  width:80%;
+  position: absolute;
+  top: 22%;
+  left:10%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+.player_hand{
+  height:145px;
+  width:65%;
   position:absolute;
   top: 66%;
-  left:33%;
+  left:18%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
 }
-.card2{
-  height:140px;
-  width:100px;
-  position:absolute;
-  
-  top: 66%; 
-  right:43%;
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
 }
-.card1_img{
-  width:100%;
-  height:100%;
+.control_div{
+  display:inline-block;
 }
-.card2_img{
-  width:100%;
-  height:100%;
-}
-.dealer_card1{
-  height: 140px;
-  width:100px;
-  background-color: red;
-  color:white;
-  position: absolute;
-  top: 22%;
-  left:30%;
-
-}
-.dealer_card2{
-  height: 140px;
-  width:100px;
-  background-color: red;
-  color:white;
-  position: absolute;
-  top: 22%;
-  left:45%;
-}
-.dealer_card1_img{
-  width:100%;
-  height:100%;
-}
-.dealer_card2_img{
-  width:100%;
-  height:100%;
+.score{
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.858);
 }
 
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+.card img{
+  width: 100px;  /* Adjust the width to your preference */
+    height: auto;  /* Keep the aspect ratio intact */
+    margin: 5px;
+}
     </style>
 <body>
-  <div class="table_div">
+  <div id='table' class="table_div">
    <img  class="poker_table" src="{{url_for('static', filename = 'noname-removebg-preview.png')}}"> 
-   <div class="card1">
-    <img src="{{url_for('static', filename = 'poker_cards/2_of_clubs.png')}}" class="card1_img">
-   </div>
-   <div class="card2">
-    <img src="{{url_for('static', filename = 'poker_cards/2_of_diamonds.png')}}" class= "card2_img">
-   </div>
-   <div class="dealer_card1">
-    <img class="dealer_card1_img" src="{{url_for('static', filename = 'poker_cards/king_of_spades2.png')}}">
-   </div>
-   <div class="dealer_card2">
-    <img class="dealer_card2_img" src="{{url_for('static', filename = 'poker_cards/bicycle_blue.svg')}}">
-   </div>
+   
+   <div class="dealer_hand" id="dealer">
+    
+   
   </div>
+   <div class=player_hand id="player" >
+    
+
+   </div>
+   
+<div id="controls" class="control_div">
+   <button id="start-button">Start Game</button>
+  <button id="hit-button" disabled>Hit</button>
+  <button id="stand-button" disabled>Stand</button>
+</div>
+  <p id=player-value class="score"> Player Score: 0</p>
+  <script src="/static/app.js"></script>
 
 </body>
 
