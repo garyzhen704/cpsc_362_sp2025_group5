@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Game</title>
+    <style>
+body {
+  margin:0;
+  background-color:black;
+  background-size: cover;
+  background-position: center center;
+  max-height:100vh;
+}
+.table_div{
+width:900px;
+height:600px;
+object-fit: cover;
+margin-left: 200px;
+margin-bottom:100px;
+position:relative;
+}
+.poker_table{
+  display:block;
+  height:100%;
+  width:100%;
+}
+.card1{
+  height:140px;
+  width:100px;
+  position:absolute;
+  top: 66%;
+  left:33%;
+}
+.card2{
+  height:140px;
+  width:100px;
+  position:absolute;
+  
+  top: 66%; 
+  right:43%;
+}
+.card1_img{
+  width:100%;
+  height:100%;
+}
+.card2_img{
+  width:100%;
+  height:100%;
+}
+.dealer_card1{
+  height: 140px;
+  width:100px;
+  background-color: red;
+  color:white;
+  position: absolute;
+  top: 22%;
+  left:30%;
+
+}
+.dealer_card2{
+  height: 140px;
+  width:100px;
+  background-color: red;
+  color:white;
+  position: absolute;
+  top: 22%;
+  left:45%;
+}
+.dealer_card1_img{
+  width:100%;
+  height:100%;
+}
+.dealer_card2_img{
+  width:100%;
+  height:100%;
+}
+
+    </style>
+<body>
+  <div class="table_div">
+   <img  class="poker_table" src="{{url_for('static', filename = 'noname-removebg-preview.png')}}"> 
+   <div class="card1">
+    <img src="{{url_for('static', filename = 'poker_cards/2_of_clubs.png')}}" class="card1_img">
+   </div>
+   <div class="card2">
+    <img src="{{url_for('static', filename = 'poker_cards/2_of_diamonds.png')}}" class= "card2_img">
+   </div>
+   <div class="dealer_card1">
+    <img class="dealer_card1_img" src="{{url_for('static', filename = 'poker_cards/king_of_spades2.png')}}">
+   </div>
+   <div class="dealer_card2">
+    <img class="dealer_card2_img" src="{{url_for('static', filename = 'poker_cards/bicycle_blue.svg')}}">
+   </div>
+  </div>
+
+</body>
+
+</html>
