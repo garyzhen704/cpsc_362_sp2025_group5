@@ -2,6 +2,9 @@
 document.getElementById('place-bet-button').addEventListener('click', function() {
   const betAmount = parseInt(document.getElementById('bet-amount').value);
   
+  // Disable the button to prevent multiple clicks
+  document.getElementById('place-bet-button').disabled = true;
+  
   fetch('/place_bet', {
     method: 'POST',
     headers: {
@@ -20,9 +23,47 @@ document.getElementById('place-bet-button').addEventListener('click', function()
     // Enable start button only if bet was successfully placed
     if (data.success) {
       document.getElementById('start-button').disabled = false;
+      // Keep the place bet button disabled until the game is over
     } else {
       alert('Not enough balance to place bet!');
+      // Re-enable the button if the bet was unsuccessful
+      document.getElementById('place-bet-button').disabled = false;
     }
+  });
+});
+
+// Add event listener for cancel bet button
+document.getElementById('cancel-bet-button').addEventListener('click', function() {
+  fetch('/cancel_bet', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Update UI to reflect bet cancellation
+    document.getElementById('balance').innerText = `Balance: $${data.balance}`;
+    document.getElementById('current-bet').innerText = `Current Bet: $${data.current_bet}`;
+    document.getElementById('start-button').disabled = true;
+    document.getElementById('place-bet-button').disabled = false;
+  });
+});
+
+// Add event listener for reset balance button
+document.getElementById('reset-balance-button').addEventListener('click', function() {
+  fetch('/reset_balance', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Update UI to reflect balance reset
+    document.getElementById('balance').innerText = `Balance: $${data.balance}`;
+    document.getElementById('current-bet').innerText = `Current Bet: $${data.current_bet}`;
+    document.getElementById('place-bet-button').disabled = false;
   });
 });
 
@@ -45,6 +86,9 @@ document.getElementById('start-button').addEventListener('click', function () {
       if (data.can_double_down) {
         document.getElementById('double-button').disabled = false;
       }
+      
+      // Disable place bet button during game
+      document.getElementById('place-bet-button').disabled = true;
       
       try {
         document.getElementById('bust_message').remove();
@@ -85,14 +129,16 @@ document.getElementById('hit-button').addEventListener('click', function () {
           pElement_m.style.fontSize = '30px';
           pElement_m.style.backgroundColor = 'yellow';
           pElement_m.style.position = 'absolute';
-          pElement_m.style.top= '55%';
-          pElement_m.style.left = '35%';
+          pElement_m.style.top = '50%';
+          pElement_m.style.left = '50%';
+          pElement_m.style.transform = 'translate(-50%, -50%)';
           pElement_m.style.margin = '0';
-          
+          pElement_m.style.padding = '10px 20px';
+          pElement_m.style.borderRadius = '10px';
           pElement_m.style.textAlign = 'center';  
           pElement_m.setAttribute('id', 'bust_message')
           const parentDiv = document.getElementById('table');
-          parentDiv.insertBefore(pElement_m, document.getElementById('player'));
+          parentDiv.appendChild(pElement_m);
           disableButtons();
       }
   });
@@ -123,16 +169,18 @@ document.getElementById('stand-button').addEventListener('click', function () {
       pElement_m.innerText = `Game Over! ${data.result}`;
       pElement_m.style.color = 'red';
       pElement_m.style.fontSize = '30px';
-      pElement_m.style.backgroundColor = 'yellow';  
-      pElement_m.style.position = 'absolute';  
-      pElement_m.style.top= '55%';  
-      pElement_m.style.left = '35%'; 
+      pElement_m.style.backgroundColor = 'yellow';
+      pElement_m.style.position = 'absolute';
+      pElement_m.style.top = '50%';
+      pElement_m.style.left = '50%';
+      pElement_m.style.transform = 'translate(-50%, -50%)';
       pElement_m.style.margin = '0';
-      
+      pElement_m.style.padding = '10px 20px';
+      pElement_m.style.borderRadius = '10px';
       pElement_m.style.textAlign = 'center';  
       pElement_m.setAttribute('id', 'bust_message')
       const parentDiv = document.getElementById('table');
-      parentDiv.insertBefore(pElement_m, document.getElementById('player'));
+      parentDiv.appendChild(pElement_m);
       
       disableButtons();
   });
@@ -209,14 +257,17 @@ document.getElementById('double-button').addEventListener('click', function() {
     pElement_m.style.fontSize = '30px';
     pElement_m.style.backgroundColor = 'yellow';
     pElement_m.style.position = 'absolute';
-    pElement_m.style.top = '55%';
-    pElement_m.style.left = '35%';
+    pElement_m.style.top = '50%';
+    pElement_m.style.left = '50%';
+    pElement_m.style.transform = 'translate(-50%, -50%)';
     pElement_m.style.margin = '0';
+    pElement_m.style.padding = '10px 20px';
+    pElement_m.style.borderRadius = '10px';
     pElement_m.style.textAlign = 'center';
     pElement_m.setAttribute('id', 'bust_message');
     
     const parentDiv = document.getElementById('table');
-    parentDiv.insertBefore(pElement_m, document.getElementById('player'));
+    parentDiv.appendChild(pElement_m);
     
     disableButtons();
   });
@@ -226,4 +277,6 @@ function disableButtons() {
   document.getElementById('hit-button').disabled = true;
   document.getElementById('stand-button').disabled = true;
   document.getElementById('double-button').disabled = true;
+  document.getElementById('start-button').disabled = true;
+  document.getElementById('place-bet-button').disabled = false;
 }

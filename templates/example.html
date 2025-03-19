@@ -17,8 +17,7 @@ body {
 width:900px;
 height:600px;
 object-fit: cover;
-margin-left: 200px;
-margin-bottom:100px;
+margin: 50px auto;
 position:relative;
 }
 .poker_table{
@@ -59,7 +58,18 @@ button {
     cursor: pointer;
 }
 .control_div{
-  display:inline-block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0,0,0,0.5);
+  padding: 10px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 800px;
 }
 .score{
   display: inline-block;
@@ -88,20 +98,29 @@ button:disabled {
     
 
    </div>
+   <p id="player-value" class="score" style="position: absolute; bottom: 85%; left: 50%; transform: translateX(-50%);"> Player Score: 0</p>
+  </div>
    
-   <div id="controls" class="control_div">
-    <div id="betting-controls">
-      <input type="number" id="bet-amount" min="1" value="10">
-      <button id="place-bet-button">Place Bet</button>
-      <p id="balance" class="score">Balance: $100</p>
-      <p id="current-bet" class="score">Current Bet: $0</p>
+  <div id="controls" class="control_div">
+    <div id="betting-controls" style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 10px; width: 100%;">
+      <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 5px;">
+        <p id="balance" class="score" style="padding: 5px 10px; border-radius: 5px; margin: 0;">Balance: $100</p>
+        <p id="current-bet" class="score" style="padding: 5px 10px; border-radius: 5px; margin: 0;">Current Bet: $0</p>
+      </div>
+      <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 5px;">
+        <input type="number" id="bet-amount" min="1" value="10" style="width: 80px; padding: 5px; border-radius: 5px;">
+        <button id="place-bet-button">Place Bet</button>
+        <button id="cancel-bet-button">Cancel Bet</button>
+      </div>
+      <button id="reset-balance-button" style="background-color: #d9534f;">Reset Balance</button>
     </div>
-    <button id="start-button" disabled>Start Game</button>
-    <button id="hit-button" disabled>Hit</button>
-    <button id="stand-button" disabled>Stand</button>
-    <button id="double-button" disabled>Double Down</button>
- </div>
-  <p id=player-value class="score"> Player Score: 0</p>
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+      <button id="start-button" disabled>Start Game</button>
+      <button id="hit-button" disabled>Hit</button>
+      <button id="stand-button" disabled>Stand</button>
+      <button id="double-button" disabled>Double Down</button>
+    </div>
+  </div>
   <script src="/static/app.js"></script>
 
 </body>

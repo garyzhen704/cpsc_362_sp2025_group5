@@ -25,6 +25,32 @@ def place_bet():
         'current_bet': player.currentBet
     })
 
+@app.route('/cancel_bet', methods=['POST'])
+def cancel_bet():
+    # Return the bet to the player's balance
+    player = game_system.players[0]
+    player.balance += player.currentBet
+    player.currentBet = 0
+    
+    return jsonify({
+        'success': True,
+        'balance': player.balance,
+        'current_bet': player.currentBet
+    })
+
+@app.route('/reset_balance', methods=['POST'])
+def reset_balance():
+    # Reset the player's balance to 100
+    player = game_system.players[0]
+    player.balance = 100
+    player.currentBet = 0
+    
+    return jsonify({
+        'success': True,
+        'balance': player.balance,
+        'current_bet': player.currentBet
+    })
+
 @app.route('/start', methods=['POST'])
 def start_game():
     # Start a new game
