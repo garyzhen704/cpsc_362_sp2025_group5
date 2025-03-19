@@ -21,7 +21,7 @@ class Player:
         return False
 
     def doubleDown(self, card, hand_parameter):
-        if self.canDoubleDown():
+        if self.canDoubleDown(hand_parameter):
             self.balance -= self.currentBet
             self.currentBet *= 2
             hand_parameter.addCard(card)
