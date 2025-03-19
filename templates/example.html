@@ -89,11 +89,18 @@ button:disabled {
 
    </div>
    
-<div id="controls" class="control_div">
-   <button id="start-button">Start Game</button>
-  <button id="hit-button" disabled>Hit</button>
-  <button id="stand-button" disabled>Stand</button>
-</div>
+   <div id="controls" class="control_div">
+    <div id="betting-controls">
+      <input type="number" id="bet-amount" min="1" value="10">
+      <button id="place-bet-button">Place Bet</button>
+      <p id="balance" class="score">Balance: $100</p>
+      <p id="current-bet" class="score">Current Bet: $0</p>
+    </div>
+    <button id="start-button" disabled>Start Game</button>
+    <button id="hit-button" disabled>Hit</button>
+    <button id="stand-button" disabled>Stand</button>
+    <button id="double-button" disabled>Double Down</button>
+ </div>
   <p id=player-value class="score"> Player Score: 0</p>
   <script src="/static/app.js"></script>
 
