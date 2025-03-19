@@ -116,7 +116,10 @@ document.getElementById('hit-button').addEventListener('click', function () {
 
       // Update player value
       document.getElementById('player-value').innerText = `Player Value: ${data.player_value}`;
-
+      
+      // Disable double down button after hit
+      document.getElementById('double-button').disabled = true;
+      
       // Check if the player has busted
       if (data.player_value > 21) {
           // Update balance after loss
@@ -225,6 +228,39 @@ function updateHand(player, hand) {
 
 // Add event listener for double down button
 document.getElementById('double-button').addEventListener('click', function() {
+  // Check if double down button is disabled
+  if (this.disabled) {
+    // Create message that double down is not allowed after hit
+    const pElement_m = document.createElement('p');
+    pElement_m.innerText = "Cannot double down after hit!";
+    pElement_m.style.color = 'red';
+    pElement_m.style.fontSize = '30px';
+    pElement_m.style.backgroundColor = 'yellow';
+    pElement_m.style.position = 'absolute';
+    pElement_m.style.top = '50%';
+    pElement_m.style.left = '50%';
+    pElement_m.style.transform = 'translate(-50%, -50%)';
+    pElement_m.style.margin = '0';
+    pElement_m.style.padding = '10px 20px';
+    pElement_m.style.borderRadius = '10px';
+    pElement_m.style.textAlign = 'center';
+    pElement_m.setAttribute('id', 'double_down_message');
+    
+    const parentDiv = document.getElementById('table');
+    parentDiv.appendChild(pElement_m);
+    
+    // Remove message after 2 seconds
+    setTimeout(function() {
+      try {
+        document.getElementById('double_down_message').remove();
+      } catch (e) {
+        // Element might not exist
+      }
+    }, 2000);
+    
+    return;
+  }
+  
   fetch('/double_down', {
     method: 'POST',
     headers: {
