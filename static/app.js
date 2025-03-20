@@ -4,6 +4,8 @@ document.getElementById('start-button').addEventListener('click', function () {
   })
   .then(response => response.json())
   .then(data => {
+    document.getElementById('start-button').innerText = `New Game`
+    
       // Update player and dealer hands
       updateHand('player', data.player_hand);
       updateHand('dealer', data.dealer_hand);
@@ -12,7 +14,10 @@ document.getElementById('start-button').addEventListener('click', function () {
       document.getElementById('hit-button').disabled = false;
       document.getElementById('stand-button').disabled = false;
       document.getElementById('player-value').innerText = `Player Value: ${data.player_value}`;
+      document.getElementById('start-button').style.display= 'none';
       document.getElementById('bust_message').remove();
+      
+
   });
 });
 
@@ -40,6 +45,7 @@ document.getElementById('hit-button').addEventListener('click', function () {
 
       // Check if the player has busted
       if (data.player_value > 21) {
+          document.getElementById('start-button').style.display= 'inline-block';
           const pElement_m = document.createElement('p');
           pElement_m.innerText = "Bust!!";
           pElement_m.style.color = 'red';  // Change text color to red
@@ -78,6 +84,7 @@ document.getElementById('stand-button').addEventListener('click', function () {
       //document.getElementById('dealer-value').innerText = `Dealer Value: ${data.dealer_value}`;
       
       // Display result
+      document.getElementById('start-button').style.display= 'inline-block';
       const pElement_m = document.createElement('p');
       pElement_m.innerText = `Game Over! ${data.result}`;
       pElement_m.style.color = 'red';  // Change text color to red
