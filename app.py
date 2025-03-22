@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for, jsonify, request
+from global_balance import Balance
 from game_system import GameSystem
 from card import Card
 app = Flask(__name__)
@@ -7,6 +8,7 @@ app = Flask(__name__)
 def index():
   return render_template('example.html')
 
+global_balance = Balance()
 game_system = GameSystem()
 
 @app.route('/place_bet', methods=['POST'])
@@ -40,10 +42,12 @@ def cancel_bet():
 
 @app.route('/reset_balance', methods=['POST'])
 def reset_balance():
-    # Reset the player's balance to 100
+    # Reset the player's balance to default
     player = game_system.players[0]
-    player.balance = 100
+    player.balance = Balance.DEFAULT_BALANCE
     player.currentBet = 0
+
+    global_balance.reset_balances()
     
     return jsonify({
         'success': True,
@@ -101,6 +105,8 @@ def hit():
         player.currentBet = 0
         response_data['balance'] = player.balance
         response_data['current_bet'] = player.currentBet
+
+        global_balance.save_balance(0, player.balance)
     
     return jsonify(response_data)
 
@@ -132,6 +138,8 @@ def stand():
     current_bet = player.currentBet
     player.currentBet = 0
     
+    global_balance.save_balance(0, player.balance)
+
     dealer_hand = [card.to_dict() for card in dealer.hand.cards]
     return jsonify({
         'dealer_hand': dealer_hand,
@@ -172,6 +180,8 @@ def double_down():
     current_bet = player.currentBet
     player.currentBet = 0
     
+    global_balance.save_balance(0, player.balance)
+
     player_hand = [card.to_dict() for card in player.hand.cards]
     dealer_hand = [card.to_dict() for card in dealer.hand.cards]
     

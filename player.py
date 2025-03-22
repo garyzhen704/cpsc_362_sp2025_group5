@@ -1,7 +1,8 @@
+from global_balance import Balance
 from hand import Hand
 
 class Player:
-    def __init__(self, balance=100):
+    def __init__(self, balance=Balance.DEFAULT_BALANCE):
         self.balance = balance
         self.hand = Hand()
         self.second_hand = Hand()
