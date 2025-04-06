@@ -31,7 +31,19 @@ class MazeGenerator:
 
             #check if new cell is within bounds
             if 0 < nx < self.width-1 and 0 < ny < self.height-1 and self.maze[ny][nx] == 1:
-                self.maze[y+dy//2][x+dx//2] = 0 #creates path betweel cells
+                self.maze[y+dy//2][x+dx//2] = 0 #creates path between cells
                 self.maze[ny][nx] = 0
 
                 self._carve_passages(nx, ny)
+
+    def get_start_pos(self):
+        return(1,0)
+    
+    def get_end_pos(self):
+        return(self.width-2, self.height-1)
+    
+    def print_maze(self):
+        for row in self.maze:
+            print(''.join(['#' if cell == 1 else '' for cell in row]))
+
+    
