@@ -72,3 +72,34 @@ def move():
     }
     
     return jsonify(result)
+
+@maze_bp.route('/next-level', methods=['POST'])
+def next_level():
+    """Generate a new level"""
+    if 'maze_game' not in session:
+        return jsonify({'error': 'No active game'}), 400
+    
+    # Recreate game from session
+    game = MazeGame()
+    game.maze = session['maze_game']['maze']
+    player_pos = session['maze_game']['player_pos']
+    game.player.reset(player_pos[0], player_pos[1])
+    game.player.moves = session['maze_game']['moves']
+    game.end_pos = session['maze_game']['end_pos']
+    game.level = session['maze_game']['level']
+    game.completed = session['maze_game']['completed']
+    
+    # Generate new level
+    result = game.generate_new_level()
+    
+    # Update session
+    session['maze_game'] = {
+        'maze': game.maze,
+        'player_pos': game.player.get_position(),
+        'end_pos': game.end_pos,
+        'level': game.level,
+        'moves': game.player.moves,
+        'completed': game.completed
+    }
+    
+    return jsonify(result)
