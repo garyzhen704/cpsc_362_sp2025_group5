@@ -37,9 +37,9 @@ class MazeGame:
         """Generate a new maze level"""
         self.level += 1
         self.maze = self.generator.generate_maze()
-        start_pos = self.generator.get_start_position()
+        start_pos = self.generator.get_start_pos()
         self.player.reset(start_pos[0], start_pos[1])
-        self.end_pos = self.generator.get_end_position()
+        self.end_pos = self.generator.get_end_pos()
         self.completed = False
         
         return {

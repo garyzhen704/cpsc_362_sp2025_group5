@@ -26,7 +26,7 @@ class MazePlayer:
             0 <= new_x < len(maze[0]) and
             maze[new_y][new_x] == 0):
 
-            self.x, self.y == new_x, new_y
+            self.x, self.y = new_x, new_y
             self.moves += 1
             return True
         
