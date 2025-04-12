@@ -2,12 +2,22 @@ from deck import Deck
 from player import Player
 from dealer import Dealer
 from hand import Hand
-
+import random
+def generate_unique_room_id():
+    return str(random.randint(1000, 9999))
 class GameSystem:
     def __init__(self):
         self.deck = Deck()
-        self.players = [Player(), Dealer()]
-
+        self.players = [Dealer()]
+    def add_player(self, player):
+        if isinstance(player, Player):  # or just Player, if Dealer isn't supposed to be here
+            self.players.append(player)
+        else:
+            print("Tried to add invalid player:", player, type(player))
+    def get_player(self,name):
+        for player in self.players:
+            if player.name == name:
+                return player
     def startGame(self):
         self.deck = Deck()
         for player in self.players:
@@ -26,15 +36,25 @@ class GameSystem:
             player.split(self.deck.drawCard(), self.deck.drawCard())
 
     def determineWinner(self):
-        playerValue = self.players[0].hand.getValue()
-        dealerValue = self.players[-1].hand.getValue()  # Dealer is last player
-        if playerValue > 21:
-            return "Dealer wins!"
-        elif dealerValue > 21 or playerValue > dealerValue:
-            return "Player wins!"
-        elif playerValue < dealerValue:
-            return "Dealer wins!"
-        else:
-            return "It's a tie!"
+        winners_dict = {}
+        dealerValue = self.players[0].hand.getValue()
+        for player in self.players:
+            if player.name == 'dealer':
+                continue
+            playerValue = player.hand.getValue()
+            if(player.busted == True):
+                winners_dict[player.playerid] = 'bust'
+                continue
+            if playerValue > 21:
+                winners_dict[player.playerid] = 'bust'
+            elif dealerValue > 21 or playerValue > dealerValue:
+                winners_dict[player.playerid] = 'winner'
+            elif playerValue < dealerValue:
+                winners_dict[player.playerid] = 'loser'
+            elif playerValue == dealerValue:
+                winners_dict[player.playerid] = 'push'
+            elif playerValue == 21:
+                winners_dict[player.playerid] = 'blackjack'
+        return winners_dict
     def dealerPlay(self):
-        self.players[-1].play(self.deck)
+        self.players[0].play(self.deck)

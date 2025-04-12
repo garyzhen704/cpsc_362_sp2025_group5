@@ -1,3 +1,37 @@
+//chat box
+const sendButton = document.getElementById("send-button");
+const chatMessages = document.getElementById("chat-messages");
+const messageInput = document.getElementById("message-input");
+let isScrolledToBottom = true;
+let currentRoom = null;
+let currentUsername = null;
+
+chatMessages.addEventListener("scroll", () => {
+  const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop === chatMessages.clientHeight;
+  isScrolledToBottom = isAtBottom; // Update the scroll status
+});
+
+ function sendMessage() {
+  const messageText = messageInput.value.trim();
+   if (messageText !== "") {
+     const newMessage = document.createElement("div");
+     newMessage.textContent = messageText;
+     chatMessages.appendChild(newMessage);
+     messageInput.value = ""; // Clear the input after sending
+       chatMessages.scrollTop = chatMessages.scrollHeight;
+   }
+ }
+
+// // Add event listener for the "Send" button
+// sendButton.addEventListener("click", sendMessage);
+
+// Add event listener for the "Enter" key to submit the message
+messageInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    sendMessage();
+  }
+});
+
 // Add event listener for place bet button
 document.getElementById('place-bet-button').addEventListener('click', function() {
   const betAmount = parseInt(document.getElementById('bet-amount').value);
@@ -18,7 +52,6 @@ document.getElementById('place-bet-button').addEventListener('click', function()
   .then(data => {
     // Update UI to reflect bet placement
     document.getElementById('balance').innerText = `Balance: $${data.balance}`;
-    document.getElementById('current-bet').innerText = `Current Bet: $${data.current_bet}`;
     
     // Enable start button only if bet was successfully placed
     if (data.success) {
@@ -44,25 +77,7 @@ document.getElementById('cancel-bet-button').addEventListener('click', function(
   .then(data => {
     // Update UI to reflect bet cancellation
     document.getElementById('balance').innerText = `Balance: $${data.balance}`;
-    document.getElementById('current-bet').innerText = `Current Bet: $${data.current_bet}`;
     document.getElementById('start-button').disabled = true;
-    document.getElementById('place-bet-button').disabled = false;
-  });
-});
-
-// Add event listener for reset balance button
-document.getElementById('reset-balance-button').addEventListener('click', function() {
-  fetch('/reset_balance', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Update UI to reflect balance reset
-    document.getElementById('balance').innerText = `Balance: $${data.balance}`;
-    document.getElementById('current-bet').innerText = `Current Bet: $${data.current_bet}`;
     document.getElementById('place-bet-button').disabled = false;
   });
 });
@@ -73,7 +88,6 @@ document.getElementById('start-button').addEventListener('click', function () {
   })
   .then(response => response.json())
   .then(data => {
-    document.getElementById('start-button').innerText = `New Game`
     
       // Update player and dealer hands
       updateHand('player', data.player_hand);
@@ -126,7 +140,6 @@ document.getElementById('hit-button').addEventListener('click', function () {
       if (data.player_value > 21) {
           // Update balance after loss
           document.getElementById('balance').innerText = `Balance: $${data.balance}`;
-          document.getElementById('current-bet').innerText = `Current Bet: $${data.current_bet}`;
           
           const pElement_m = document.createElement('p');
           pElement_m.innerText = "Bust!! Dealer wins!";
@@ -167,7 +180,6 @@ document.getElementById('stand-button').addEventListener('click', function () {
       
       // Update balance after payout
       document.getElementById('balance').innerText = `Balance: $${data.balance}`;
-      document.getElementById('current-bet').innerText = `Current Bet: $${data.current_bet}`;
       
       // Display result
       document.getElementById('start-button').style.display= 'inline-block';
@@ -281,7 +293,6 @@ document.getElementById('double-button').addEventListener('click', function() {
     
     // Update balance and bet
     document.getElementById('balance').innerText = `Balance: $${data.balance}`;
-    document.getElementById('current-bet').innerText = `Current Bet: $${data.current_bet}`;
     
     // Update player value
     document.getElementById('player-value').innerText = `Player Value: ${data.player_value}`;

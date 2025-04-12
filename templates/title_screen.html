@@ -1,9 +1,53 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>
+      title screen
+    </title>
+    <style>
+      button{
+        display:block;
+        margin-top:15px;
+        padding:25px;
+        border-radius:25px;
+        cursor:pointer;
+        background-color: orange;
+        
+        width:200px;
+      }
+      .title_div{
+        margin-left:480px;
+        margin-bottom:50px;
+      }
+      div{
+        width:200px;
+        margin:auto;
+        
+        
+      }
     
+    </style>
   </head>
-  <body>
+  <body style="background-color: black;">
+    <div class="title_div">
+      <p style="width: 350px; font-size:xx-large; color:white; text-align: left;">Welcome to BlackJack!</p>
+    </div>
 
+    <div class="selections">
+    <button id="host_button" class="host-button">
+      Host a Game
+    </button>
+    <button id= "join_button" class="Join-button">
+      Join a Game
+    </button>
+    <button id = "join_code_button">
+      Enter Join Code
+    </button>
+  
+    </div>
+
+    <script src="https://cdn.socket.io/4.1.3/socket.io.min.js"></script>
+    <script src="/static/title_screen.js"></script>
   </body>
+
 </html>
