@@ -71,8 +71,9 @@ h1 {
 }
 
 .player {
-    background-color: #007bff;
-    border-radius: 50%;
+    background-image: url('../assets/player.png');
+    background-size: cover;
+    background-position: center;
 }
 
 .end {
