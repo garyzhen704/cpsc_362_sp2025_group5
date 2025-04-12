@@ -1,15 +1,18 @@
-from flask import Flask, render_template, url_for, jsonify, request
-from game_system import GameSystem
-from card import Card
-app = Flask(__name__)
+from flask import Blueprint, render_template, jsonify, request
+from .game_system import GameSystem
+from .card import Card
 
-@app.route('/')
-def index():
-  return render_template('blackjack.html')
+# Define the Blueprint
+blackjack_bp = Blueprint('blackjack', __name__, template_folder='../templates', static_folder='../static')
 
+# Initialize the game system
 game_system = GameSystem()
 
-@app.route('/place_bet', methods=['POST'])
+@blackjack_bp.route('/')
+def index():
+    return render_template('blackjack.html')
+
+@blackjack_bp.route('/place_bet', methods=['POST'])
 def place_bet():
     # Handle bet placement
     data = request.json
@@ -25,7 +28,7 @@ def place_bet():
         'current_bet': player.currentBet
     })
 
-@app.route('/cancel_bet', methods=['POST'])
+@blackjack_bp.route('/cancel_bet', methods=['POST'])
 def cancel_bet():
     # Return the bet to the player's balance
     player = game_system.players[0]
@@ -38,7 +41,7 @@ def cancel_bet():
         'current_bet': player.currentBet
     })
 
-@app.route('/reset_balance', methods=['POST'])
+@blackjack_bp.route('/reset_balance', methods=['POST'])
 def reset_balance():
     # Reset the player's balance to 100
     player = game_system.players[0]
@@ -51,7 +54,7 @@ def reset_balance():
         'current_bet': player.currentBet
     })
 
-@app.route('/start', methods=['POST'])
+@blackjack_bp.route('/start', methods=['POST'])
 def start_game():
     # Start a new game
     game_system.startGame()
@@ -74,7 +77,7 @@ def start_game():
         'current_bet': player.currentBet
     })
     
-@app.route('/hit', methods=['POST'])
+@blackjack_bp.route('/hit', methods=['POST'])
 def hit():
     # Handle the player's "hit" action
     data = request.json
@@ -104,7 +107,7 @@ def hit():
     
     return jsonify(response_data)
 
-@app.route('/stand', methods=['POST'])
+@blackjack_bp.route('/stand', methods=['POST'])
 def stand():
     # Handle the player's "stand" action
     data = request.json
@@ -142,7 +145,7 @@ def stand():
         'current_bet': player.currentBet
     })
 
-@app.route('/double_down', methods=['POST'])
+@blackjack_bp.route('/double_down', methods=['POST'])
 def double_down():
     # Handle the player's double down action
     data = request.json
@@ -185,5 +188,3 @@ def double_down():
         'current_bet': current_bet
     })
 
-if __name__ == '__main__':
-  app.run(debug = True)

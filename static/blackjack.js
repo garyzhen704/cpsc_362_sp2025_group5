@@ -5,7 +5,7 @@ document.getElementById('place-bet-button').addEventListener('click', function()
   // Disable the button to prevent multiple clicks
   document.getElementById('place-bet-button').disabled = true;
   
-  fetch('/place_bet', {
+  fetch('/blackjack/place_bet', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ document.getElementById('place-bet-button').addEventListener('click', function()
 
 // Add event listener for cancel bet button
 document.getElementById('cancel-bet-button').addEventListener('click', function() {
-  fetch('/cancel_bet', {
+  fetch('/blackjack/cancel_bet', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ document.getElementById('cancel-bet-button').addEventListener('click', function(
 
 // Add event listener for reset balance button
 document.getElementById('reset-balance-button').addEventListener('click', function() {
-  fetch('/reset_balance', {
+  fetch('/blackjack/reset_balance', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ document.getElementById('reset-balance-button').addEventListener('click', functi
 });
 
 document.getElementById('start-button').addEventListener('click', function () {
-  fetch('/start', {
+  fetch('/blackjack/start', {
       method: 'POST',
   })
   .then(response => response.json())
@@ -99,7 +99,7 @@ document.getElementById('start-button').addEventListener('click', function () {
 });
 
 document.getElementById('hit-button').addEventListener('click', function () {
-  fetch('/hit', {
+  fetch('/blackjack/hit', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -148,7 +148,7 @@ document.getElementById('hit-button').addEventListener('click', function () {
 });
 
 document.getElementById('stand-button').addEventListener('click', function () {
-  fetch('/stand', {
+  fetch('/blackjack/stand', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -261,7 +261,7 @@ document.getElementById('double-button').addEventListener('click', function() {
     return;
   }
   
-  fetch('/double_down', {
+  fetch('/blackjack/double_down', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

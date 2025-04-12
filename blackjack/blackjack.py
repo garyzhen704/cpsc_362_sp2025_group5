@@ -1,4 +1,4 @@
-from game_system import GameSystem
+from .game_system import GameSystem
 
 def main():
     evaluate_second_hand = False
