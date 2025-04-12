@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             maze = data.maze;
             playerPos = data.position;
-            endPos = data.end_pos;
+            endPos = [data.maze[0].length-2, data.maze.length-1];
             level = data.level;
             moves = data.moves;
             completed = data.completed;
@@ -94,6 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
             updateUI();
             renderMaze();
             completionMessage.style.display = 'none';
+            
+            console.log("Next level loaded:", data);
         })
         .catch(error => console.error('Error loading next level:', error));
     }
