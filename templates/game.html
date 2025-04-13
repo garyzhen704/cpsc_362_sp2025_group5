@@ -9,6 +9,24 @@
      other_hands should be set to flex after none.
     -->
     <style>
+      html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: black;
+    }
+
+    .game-wrapper {
+      width: 1280px;
+      height: 720px;
+      transform-origin: top left;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+
 body {
   margin:0;
   background-color:black;
@@ -325,106 +343,126 @@ button {
     </style>
     
 <body>
-<div class="profile_table_container">
+  <div class="game-wrapper">
+    <div class="profile_table_container">
   
-  <p class="room_number" id="room-number">Room#:</p>
-  <div class="holds_profiles1">
-    <div class="other_profile1a" id="other_profile2" style="display: block;">
-      <img class="ready_mark" id="ready_mark2" src="{{url_for('static', filename = 'checkmark.png')}}" style="width:30px; height:30px; display:none;">
-      <img class="profile_pic" id="player2-profilepic" style="margin-left:20px; display:none"src="{{url_for('static', filename = 'cropped image.png')}}">
-      <p class="bust_message" id="result-message2" style="margin-left:50px; visibility: hidden;">BUST!</p>
-      <p class="other_username" id="player2-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
-      <p class="other_balance"id="player2-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
-      <p  class="score" id="player2-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
-      <p  class="score" id="result2" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
-    </div>
-    <div class="other_profile1b" id="other_profile3" style="display: block;">
-      <img class="ready_mark" id="ready_mark3" src="{{url_for('static', filename = 'checkmark.png')}}" style="width:30px; height:30px; display:none;">
-      <img class="profile_pic" id="player3-profilepic" style="margin-left:20px; display:none;"src="{{url_for('static', filename = 'cropped image.png')}}">
-      <p class="bust_message" id="result-message3" style="margin-left:50px; visibility: hidden;">BUST!</p>
-      <p class="other_username" id="player3-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
-      <p class="other_balance" id="player3-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
-      <p  class="score" id="player3-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
-      <p  class="score" id="result3" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
-      
-    </div>
-
-  </div>
-  <div id='table' class="table_div">
-    <p id='dealer_name'style="position:absolute; top:11%; left:46%; display:''; width:50px; height:25px;color:yellow; background-color: none;">Dealer</p>
-   <img  class="poker_table" src="{{url_for('static', filename = 'noname-removebg-preview.png')}}"> 
-         <!-- All players' cards will be shown here -->
-    <div class="other_hand2" class="card" id="player2-cards" style="display:none;"></div>
-    <div class="other_hand3" class="card" id="player3-cards"style="display:none;"></div>
-    <div class="other_hand4" class="card" id="player4-cards"style="display:none;"></div>
-    <div class="other_hand5" class="card" id="player5-cards"style="display:none;"></div>
-   
-   <div class="dealer_hand" class="card" id="dealer"></div>
-   <div class=player_hand class="card" id="player" > </div>
-  </div>
-  <div class="holds_profiles2">
-    <div class="other_profile2a" id="other_profile4" style="display: block;">
-      <img class="ready_mark" id="ready_mark4" src="{{url_for('static', filename = 'checkmark.png')}}" style="width:30px; height:30px; display:none;">
-      <img id="player4-profilepic" class="profile_pic" style="margin-left:20px; display:none;"src="{{url_for('static', filename = 'cropped image.png')}}">
-      <p class="bust_message" id="result-message4" style="margin-left:50px;visibility: hidden;">BUST!</p>
-      <p class="other_username" id="player4-username"style="margin-top:2px; margin-bottom:0px; color:white; background-color: grey; display:none;"> Username</p>
-      <p class="other_balance" id="player4-balance" style="margin-top:2px; margin-bottom:0px; color:white; background-color: grey; display:none;"> Balance: </p>
-      <p  class="score" id="player4-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
-      <p  class="score" id="result4" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
-    </div>
-    <div class="other_profile2b" id="other_profile5" style="display: block;">
-      <img class="ready_mark" id="ready_mark5" src="{{url_for('static', filename = 'checkmark.png')}}" style="width:30px; height:30px; display:none;">
-      <img id="player5-profilepic"class="profile_pic" style="margin-left:20px; display:none;"src="{{url_for('static', filename = 'cropped image.png')}}">
-      <p class="bust_message" id="result-message5" style="margin-left:50px;visibility: hidden;">BUST!</p>
-      <p class="other_username" id="player5-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
-      <p class="other_balance" id="player5-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
-      <p  class="score" id="player5-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
-      <p  class="score" id="result5" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
-    </div>
-  </div>
-</div>
-
-
-  
-
-
-  <div class="chat-window">
-    <div id="chat-messages">
-      <!-- Chat messages will go here -->
-    </div>
-    <div class="input_bar_div">
-      <input type="text" id="message-input" placeholder="Type your message...">
-      <button id="send-button" class="chat-button">Send</button>
-    </div>
-    <button class='leave_button' id="leave-button"> Leave Game</button>
-      
-  </div>
-   
-  <div id="controls" class="control_div">
-    <div id="betting-controls" style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 10px; width: 100%;">
-      <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 5px;">
-        <img class="ready_mark" id="ready_mark1" src="{{url_for('static', filename = 'checkmark.png')}}" style="width:30px; height:30px; display:none;">
-        <img class="profile_pic" id="player1-profilepic" src="{{url_for('static', filename = 'cropped image.png')}}">
-        <div class="profile_info">
-          <p class="bust_message" id="result-message1" style="margin-left:23px;visibility: hidden;">BUST!</p>
-          <p id="player1-balance" class="score" style="padding: 5px 10px; border-radius: 5px; margin: 0;">Balance: </p>
-          <p id="player1-currentbet" class="score" style="margin-top:2px;margin-bottom:0px; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
-          <p id="player1-username" class="score" style="margin-top:2px;margin-bottom:0px;padding: 5px 10px; border-radius: 5px; margin: 10;"> Username</p>
+      <p class="room_number" id="room-number">Room#:</p>
+      <div class="holds_profiles1">
+        <div class="other_profile1a" id="other_profile2" style="display: block;">
+          <img class="ready_mark" id="ready_mark2" src="{{url_for('static', filename = 'checkmark.png')}}" style="width:30px; height:30px; display:none;">
+          <img class="profile_pic" id="player2-profilepic" style="margin-left:20px; display:none"src="{{url_for('static', filename = 'cropped image.png')}}">
+          <p class="bust_message" id="result-message2" style="margin-left:50px; visibility: hidden;">BUST!</p>
+          <p class="other_username" id="player2-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
+          <p class="other_balance"id="player2-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
+          <p  class="score" id="player2-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
+          <p  class="score" id="result2" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
         </div>
-        
+        <div class="other_profile1b" id="other_profile3" style="display: block;">
+          <img class="ready_mark" id="ready_mark3" src="{{url_for('static', filename = 'checkmark.png')}}" style="width:30px; height:30px; display:none;">
+          <img class="profile_pic" id="player3-profilepic" style="margin-left:20px; display:none;"src="{{url_for('static', filename = 'cropped image.png')}}">
+          <p class="bust_message" id="result-message3" style="margin-left:50px; visibility: hidden;">BUST!</p>
+          <p class="other_username" id="player3-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
+          <p class="other_balance" id="player3-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
+          <p  class="score" id="player3-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
+          <p  class="score" id="result3" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
+          
+        </div>
+    
       </div>
-      <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 5px;">
-        <input type="number" id="bet-amount" min="1" value="10" style="width: 80px; padding: 5px; border-radius: 5px;">
-        <button id="place-bet-button" >Place Bet</button>
+      <div id='table' class="table_div">
+        <p id='dealer_name'style="position:absolute; top:11%; left:46%; display:''; width:50px; height:25px;color:yellow; background-color: none;">Dealer</p>
+       <img  class="poker_table" src="{{url_for('static', filename = 'noname-removebg-preview.png')}}"> 
+             <!-- All players' cards will be shown here -->
+        <div class="other_hand2" class="card" id="player2-cards" style="display:none;"></div>
+        <div class="other_hand3" class="card" id="player3-cards"style="display:none;"></div>
+        <div class="other_hand4" class="card" id="player4-cards"style="display:none;"></div>
+        <div class="other_hand5" class="card" id="player5-cards"style="display:none;"></div>
+       
+       <div class="dealer_hand" class="card" id="dealer"></div>
+       <div class=player_hand class="card" id="player" > </div>
+      </div>
+      <div class="holds_profiles2">
+        <div class="other_profile2a" id="other_profile4" style="display: block;">
+          <img class="ready_mark" id="ready_mark4" src="{{url_for('static', filename = 'checkmark.png')}}" style="width:30px; height:30px; display:none;">
+          <img id="player4-profilepic" class="profile_pic" style="margin-left:20px; display:none;"src="{{url_for('static', filename = 'cropped image.png')}}">
+          <p class="bust_message" id="result-message4" style="margin-left:50px;visibility: hidden;">BUST!</p>
+          <p class="other_username" id="player4-username"style="margin-top:2px; margin-bottom:0px; color:white; background-color: grey; display:none;"> Username</p>
+          <p class="other_balance" id="player4-balance" style="margin-top:2px; margin-bottom:0px; color:white; background-color: grey; display:none;"> Balance: </p>
+          <p  class="score" id="player4-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
+          <p  class="score" id="result4" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
+        </div>
+        <div class="other_profile2b" id="other_profile5" style="display: block;">
+          <img class="ready_mark" id="ready_mark5" src="{{url_for('static', filename = 'checkmark.png')}}" style="width:30px; height:30px; display:none;">
+          <img id="player5-profilepic"class="profile_pic" style="margin-left:20px; display:none;"src="{{url_for('static', filename = 'cropped image.png')}}">
+          <p class="bust_message" id="result-message5" style="margin-left:50px;visibility: hidden;">BUST!</p>
+          <p class="other_username" id="player5-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
+          <p class="other_balance" id="player5-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
+          <p  class="score" id="player5-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
+          <p  class="score" id="result5" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
+        </div>
       </div>
     </div>
-    <div id ='game-buttons'style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
-      <p id='result1' style="display:none; background-color: red; width:50px; height:40px;"></p>
-      <button id="hit-button" >Hit</button>
-      <button id="stand-button" >Stand</button>
-      <button id="double-button"  >Double Down</button>
-    </div>
+    
+    
+      
+    
+    
+      <div class="chat-window">
+        <div id="chat-messages">
+          <!-- Chat messages will go here -->
+        </div>
+        <div class="input_bar_div">
+          <input type="text" id="message-input" placeholder="Type your message...">
+          <button id="send-button" class="chat-button">Send</button>
+        </div>
+        <button class='leave_button' id="leave-button"> Leave Game</button>
+          
+      </div>
+       
+      <div id="controls" class="control_div">
+        <div id="betting-controls" style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 10px; width: 100%;">
+          <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 5px;">
+            <img class="ready_mark" id="ready_mark1" src="{{url_for('static', filename = 'checkmark.png')}}" style="width:30px; height:30px; display:none;">
+            <img class="profile_pic" id="player1-profilepic" src="{{url_for('static', filename = 'cropped image.png')}}">
+            <div class="profile_info">
+              <p class="bust_message" id="result-message1" style="margin-left:23px;visibility: hidden;">BUST!</p>
+              <p id="player1-balance" class="score" style="padding: 5px 10px; border-radius: 5px; margin: 0;">Balance: </p>
+              <p id="player1-currentbet" class="score" style="margin-top:2px;margin-bottom:0px; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
+              <p id="player1-username" class="score" style="margin-top:2px;margin-bottom:0px;padding: 5px 10px; border-radius: 5px; margin: 10;"> Username</p>
+            </div>
+            
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 5px;">
+            <input type="number" id="bet-amount" min="1" value="10" style="width: 80px; padding: 5px; border-radius: 5px;">
+            <button id="place-bet-button" >Place Bet</button>
+          </div>
+        </div>
+        <div id ='game-buttons'style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+          <p id='result1' style="display:none; background-color: red; width:50px; height:40px;"></p>
+          <button id="hit-button" >Hit</button>
+          <button id="stand-button" >Stand</button>
+          <button id="double-button"  >Double Down</button>
+        </div>
+      </div>
+
+
   </div>
+
+
+
+  <script>
+    function scaleGame() {
+      const game = document.querySelector('.game-wrapper');
+      const scaleX = window.innerWidth / 1280;
+      const scaleY = window.innerHeight / 720;
+      const scale = Math.min(scaleX, scaleY);
+
+      game.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', scaleGame);
+    window.addEventListener('load', scaleGame);
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.min.js"></script>
   <script src="/static/game.js"></script>
   
