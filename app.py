@@ -3,7 +3,7 @@ from blackjack.app import blackjack_bp  #Blackjack Blueprint
 
 app = Flask(__name__)
 
-app.register_blueprint(blackjack_bp, url_prefix='/blackjack')
+app.register_blueprint(blackjack_bp, url_prefix='/blackjack') # Register the Blackjack Blueprint
 
 @app.route('/')
 def home():
