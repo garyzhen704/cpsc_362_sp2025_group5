@@ -1,7 +1,7 @@
-from deck import Deck
-from player import Player
-from dealer import Dealer
-from hand import Hand
+from .deck import Deck
+from .player import Player
+from .dealer import Dealer
+from .hand import Hand
 
 class GameSystem:
     def __init__(self):
