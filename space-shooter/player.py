@@ -1,6 +1,5 @@
 import pygame
 from pygame.locals import *
-import globals as gl
 from object import Object
 from vector import Vector
 
@@ -17,13 +16,10 @@ def get_input_dir() -> Vector:
     if keys[K_DOWN] or keys[K_s]:
         dir.y += 1.0
 
-    if dir.magnitude() > 0.1:
-        pass
-
     return dir.normalized()
 
 
-hitbox_size = 15
+hitbox_radius = 15
 max_speed = 360  # Pixels per sec
 acceleration = 15  # Pixels per sec ^ 2
 deceleration = 0.5
@@ -31,12 +27,16 @@ deceleration = 0.5
 
 class Player(Object):
     def __init__(self, pos: Vector, color):
-        super().__init__(hitbox_size, pos, Vector(0, 0), color)
+        super().__init__(hitbox_radius, pos, Vector(0, 0), color)
 
-    def update(self):
+    def update(self, fps: float):
         input_dir = get_input_dir()
         throttle_on = input_dir.magnitude() > 0.1
 
-        target_vel = input_dir * (max_speed / gl.FPS)
-        self.velocity = self.velocity.moved_toward(target_vel, (acceleration if throttle_on else deceleration) / gl.FPS)
-        self.apply_velocity()
+        target_vel = input_dir * max_speed
+        self.velocity = self.velocity.moved_toward(target_vel, (acceleration if throttle_on else deceleration))
+        self.apply_velocity(fps)
+
+        collisions = self.hitbox.get_collisions()
+        if collisions:
+            print(collisions)

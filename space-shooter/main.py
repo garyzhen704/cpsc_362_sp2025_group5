@@ -5,11 +5,17 @@ import globals as gl
 from object import Object
 from vector import Vector
 from player import Player
+from asteroid import Asteroid
 
+def wrap(num, min, max):
+    range_size = max - min + 1
+    return (num - min) % range_size + min
 
 def clamp_to_screen(obj: Object):
-    obj.position = Vector(obj.position.x % gl.screen_width, obj.position.y % gl.screen_height)
-
+    radius = obj.hitbox.radius
+    x = wrap(obj.position.x, -radius, gl.screen_width + radius)
+    y = wrap(obj.position.y, -radius, gl.screen_height + radius)
+    obj.position = Vector(x, y)
 
 pygame.init()
 screen = pygame.display.set_mode((gl.screen_width, gl.screen_height))
@@ -19,6 +25,9 @@ fps_clock = pygame.time.Clock()
 player = Player(gl.player_start_pos, gl.WHITE)
 gl.spawn_obj(player)
 
+test_asteroid = Asteroid(5, Vector(500, 500), Vector(-400, 200))
+gl.spawn_obj(test_asteroid)
+
 # Main game loop
 while True:
     for event in pygame.event.get():
@@ -26,12 +35,19 @@ while True:
             pygame.quit()
             sys.exit()
 
+        #debug
+        if event.type == KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                for obj in gl.game_objects.copy():
+                    if isinstance(obj, Asteroid):
+                        obj.destroy()
+
     screen.fill(gl.BLACK)
 
     # Update and draw every object
     obj: Object
     for obj in gl.game_objects:
-        obj.update()
+        obj.update(gl.FPS)
         clamp_to_screen(obj)
         obj.draw(screen)
 

@@ -22,3 +22,7 @@ game_objects = set()
 
 def spawn_obj(obj):
     game_objects.add(obj)
+
+def delete_obj(obj):
+    if obj in game_objects:
+        game_objects.remove(obj)

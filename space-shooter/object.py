@@ -6,8 +6,8 @@ from vector import Vector
 # Abstract class
 # Base class for all physical game objects
 class Object(ABC):
-    def __init__(self, hitbox_size: float, pos: Vector, vel: Vector, color):
-        self.hitbox = Hitbox(self, hitbox_size)
+    def __init__(self, hitbox_radius: float, pos: Vector, vel: Vector, color):
+        self.hitbox = Hitbox(self, hitbox_radius)
         self.position = pos
         self.velocity = vel
         self.color = color
@@ -16,25 +16,21 @@ class Object(ABC):
     def __del__(self):
         print(f"{self} deleted")
 
-    def delete(self):
-        if self in game_objects:
-            game_objects.remove(self)
+    def update(self, fps: float):
+        self.apply_velocity(fps)
 
-    def update(self):
-        self.apply_velocity()
-
-    def apply_velocity(self):
-        self.position += self.velocity
+    def apply_velocity(self, fps: float):
+        self.position += self.velocity / fps
 
     def draw(self, screen: pygame.Surface):
-        pygame.draw.circle(screen, self.color, tuple(self.position), self.hitbox.size)
+        pygame.draw.circle(screen, self.color, tuple(self.position), self.hitbox.radius)
 
 
 # All Objects contain a Hitbox which is used to detect "collisions"
 class Hitbox():
-    def __init__(self, owner: Object, size: float):
+    def __init__(self, owner: Object, radius: float):
         self.owner = owner
-        self.size = size
+        self.radius = radius
 
     def get_collisions(self):
         collisions = set()
@@ -44,9 +40,9 @@ class Hitbox():
             if obj == self.owner:
                 continue
 
-            other_size = obj.hitbox.size
-            diff = abs(other_size - self.size)
-            sum = other_size + self.size
+            other_radius = obj.hitbox.radius
+            diff = abs(other_radius - self.radius)
+            sum = other_radius + self.radius
             dist = (obj.position - self.owner.position).magnitude()
 
             # detect if 2 hitboxes are intersecting
