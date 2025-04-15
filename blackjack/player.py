@@ -1,12 +1,22 @@
-from .hand import Hand
+from blackjack.hand import Hand
+import random
 
 class Player:
     def __init__(self, balance=100):
+        self.name = "no name"
         self.balance = balance
         self.hand = Hand()
         self.second_hand = Hand()
         self.currentBet = 0
-
+        self.status = ""
+        self.playerid = str(random.randint(1000, 9999))
+        self.turn = False
+        self.busted = False
+        self.result = ''
+        self.adjusted_balance = False
+        self.islast = False
+    def setName(self,name):
+        self.name = name
     def hit(self, card, hand_parameter):
         hand_parameter.addCard(card)
 
@@ -22,7 +32,6 @@ class Player:
 
     def doubleDown(self, card, hand_parameter):
         if self.canDoubleDown(hand_parameter):
-            self.balance -= self.currentBet
             self.currentBet *= 2
             hand_parameter.addCard(card)
             return True
@@ -42,7 +51,7 @@ class Player:
         if(len(self.hand.cards) == 2 and self.hand.cards[0].rank == self.hand.cards[1].rank):
             return True
     def canDoubleDown(self, hand_parameter):
-        if(len(hand_parameter.cards) == 2 and self.balance >= self.currentBet):
+        if(len(hand_parameter.cards) == 2 and self.balance >= 2*self.currentBet):
             return True
         else:
             return False

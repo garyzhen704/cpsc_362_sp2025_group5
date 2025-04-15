@@ -1,4 +1,4 @@
-from .player import Player
+from blackjack.player import Player
 
 # The Dealer class inherits from the Player class
 class Dealer(Player):
