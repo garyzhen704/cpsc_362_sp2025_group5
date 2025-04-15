@@ -7,7 +7,7 @@ app.register_blueprint(blackjack_bp, url_prefix='/blackjack') # Register the Bla
 
 @app.route('/')
 def home():
-    return render_template('homepage.html')  # Serve the homepage
+    return render_template('home.html')  # Serve the homepage
 
 @app.route('/brick-breaker')
 def brick_breaker():

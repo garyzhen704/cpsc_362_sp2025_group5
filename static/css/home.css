@@ -1,0 +1,195 @@
+/* ===== Import Retro Font from Google ===== */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ===== Reset & Base ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  cursor: url('/images/cursor.cur') 0 0, auto !important;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Arial', sans-serif;
+  background: #0e0e0e;
+  color: white;
+  overflow-x: hidden;
+}
+
+/* ===== Canvas Background ===== */
+canvas#bgCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* ===== Main Content Wrapper ===== */
+.content {
+  position: relative;
+  z-index: 1;
+  padding: 40px 20px;
+  max-width: 1300px;
+  margin: auto;
+}
+
+/* ===== Header / Title - Arcade Style ===== */
+.site-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.site-header h1 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 3em;
+  color: #ff00cc;
+  text-shadow:
+    2px 2px 0 #00ffe1,
+    -2px -2px 0 #ff0055,
+    0 0 10px #ff00cc,
+    0 0 20px #ff00cc;
+  letter-spacing: 3px;
+  line-height: 1.5;
+  font-weight: normal;
+  animation: glow 2s infinite alternate; /* Add animation for glowing effect */
+  
+}
+/* Glowing Effect Animation */
+@keyframes glow {
+  0% {
+    text-shadow:
+      2px 2px 0 #00ffe1,
+      -2px -2px 0 #ff0055,
+      0 0 10px #ff00cc,
+      0 0 20px #ff00cc;
+    color: #ff00cc; /* Start with the base color */
+  }
+  50% {
+    text-shadow:
+      2px 2px 0 #00ffe1,
+      -2px -2px 0 #ff3399,
+      0 0 25px #ff00cc,
+      0 0 40px #ff00cc;
+    color: #ff00cc; /* Slightly lighter color */
+  }
+  100% {
+    text-shadow:
+      2px 2px 0 #00ffe1,
+      -2px -2px 0 #ff0055,
+      0 0 10px #ff00cc,
+      0 0 20px #ff00cc;
+    color: #ff00cc; /* Back to the original color */
+  }
+}
+
+/* Blinking Cursor Animation */
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.site-header h1 .cursor {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 3em;
+  color: #ff00cc;
+  animation: blink 1s step-end infinite;
+}
+
+/* ===== Game Gallery Grid (2 Columns Max) ===== */
+.game-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  gap: 40px;
+  padding-bottom: 80px;
+}
+
+/* ===== Game Card ===== */
+.game-card {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  transition: transform 0.25s ease, background 0.25s ease;
+  border: 2px solid;
+  border-image: linear-gradient(135deg, #ff00cc, #00ffe1) 1;
+  box-shadow:
+    0 0 6px #ff00cc,
+    0 0 12px #00ffe1;
+}
+
+.game-card:hover {
+  transform: scale(1.03);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 0 8px #ff00cc,
+    0 0 16px #00ffe1;
+}
+
+.game-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.game-card h3 {
+  font-size: 1.6em;
+  margin: 0.4em 0;
+  color: #ffffff;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.game-card p {
+  font-size: 0.95em;
+  color: #cccccc;
+  margin-bottom: 0.8em;
+}
+
+.game-card a {
+  display: inline-block;
+  padding: 12px 18px;
+  font-size: 0.9em;
+  font-family: 'Press Start 2P', monospace;
+  color: #fff;
+  background-color: #ff5f5f;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.game-card a:hover {
+  background-color: #ff3b3b;
+}
+
+/* ===== Responsive Fixes ===== */
+@media (max-width: 600px) {
+  .site-header h1 {
+    font-size: 1.8em;
+    letter-spacing: 1px;
+  }
+
+  .game-card img {
+    height: 200px;
+  }
+
+  .game-card h3 {
+    font-size: 1em; /* Increased for readability */
+  }
+
+  .game-card p {
+    font-size: 0.9em; /* Adjusted for better readability */
+  }
+}

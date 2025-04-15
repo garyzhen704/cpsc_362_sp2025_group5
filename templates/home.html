@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fullerton Funhouse Inc.</title>
+  <link rel="stylesheet" href="/static/css/home.css" />
+</head>
+<body>
+
+  <!-- Canvas Background -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Header -->
+    <header class="site-header">
+      <h1>Fullerton Funhouse Inc.</h1>
+    </header>
+
+    <!-- Game Grid -->
+    <section class="game-gallery">
+      <!-- Game 1 -->
+      <div class="game-card">
+        <img src="{{ url_for('static', filename='images/BrikBrakeTN.png') }}" alt="Game 1">
+        <h3>Brick Breaker</h3>
+        <p>Super cool awesome fun extraordinary game created by Philips</p>
+        <a href="/brick-breaker">Play Now</a>
+      </div>
+
+      <!-- Game 2 -->
+      <div class="game-card">
+        <img src="" alt="Game 2">
+        <h3>Pixel Brawl</h3>
+        <p>Retro pixel-art arena fighter with power-ups.</p>
+        <a href="/blackjack/">Play Now</a>
+      </div>
+
+      <!-- Game 3 -->
+      <div class="game-card">
+        <img src="" alt="Game 3">
+        <h3>Roller Rush</h3>
+        <p>Arcade-style roller skating racing game.</p>
+        <a href="#">Play Now</a>
+      </div>
+
+      <!-- Game 4 -->
+      <div class="game-card">
+        <img src="" alt="Game 4">
+        <h3>Funhouse Escape</h3>
+        <p>Puzzle-based escape game inside a surreal funhouse.</p>
+        <a href="#">Play Now</a>
+      </div>
+
+      <!-- Game 5 -->
+      <div class="game-card">
+        <img src="" alt="Game 5">
+        <h3>Midnight Madness</h3>
+        <p>Endless runner with neon-clown chaos.</p>
+        <a href="#">Play Now</a>
+      </div>
+    </section>
+  </div>
+
+  <script src="/static/home.js"></script>
+</body>
+</html>
