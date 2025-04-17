@@ -53,3 +53,9 @@ class Vector():
 
     def __repr__(self):
         return f"Vector({self.x}, {self.y})"
+
+    def distance_to(self, other: 'Vector') -> float:
+        """Calculate the Euclidean distance to another Vector."""
+        dx = self.x - other.x
+        dy = self.y - other.y
+        return math.sqrt(dx * dx + dy * dy)

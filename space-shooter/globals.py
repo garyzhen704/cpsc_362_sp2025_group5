@@ -1,8 +1,12 @@
 from vector import Vector
 
 # Game window
-screen_width = 800
-screen_height = 600
+screen_width = 1000
+screen_height = 800
+score = 0
+
+
+game_over = False
 
 # Frame rate
 FPS = 60
@@ -26,3 +30,5 @@ def spawn_obj(obj):
 def delete_obj(obj):
     if obj in game_objects:
         game_objects.remove(obj)
+
+player = None
