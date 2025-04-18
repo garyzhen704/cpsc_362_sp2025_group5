@@ -56,14 +56,6 @@ class Asteroid(Object):
         self.angle += self.rotation * (1 / fps)
         self.image = pygame.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_rect(center=(self.position.x, self.position.y))
-        for obj in globals.game_objects:
-            if isinstance(obj, player.Player):
-                # Use circular collision (distance between centers < sum of radii)
-                distance = self.position.distance_to(obj.position)
-                if distance < self.hitbox.radius + obj.hitbox.radius:
-                    obj.register_hit()
-                    self.destroy()
-                    break
 
     def draw(self, surface):
         self.rect.center = (self.position.x, self.position.y)

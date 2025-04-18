@@ -19,7 +19,7 @@ def reset_game():
     gl.score = 0
 
     # Recreate player
-    player = Player(gl.player_start_pos, gl.WHITE)
+    player = Player(gl.player_start_pos, gl.player_color)
     gl.player = player
     gl.spawn_obj(player)
 
@@ -84,18 +84,18 @@ def wrap(num, min, max):
 
 def clamp_to_screen(obj: Object):
     if isinstance(obj.hitbox, pygame.Rect):
-        x = wrap(obj.position.x, 0, info.current_w)
-        y = wrap(obj.position.y, 0, info.current_h)
+        x = wrap(obj.position.x, 0, gl.screen_width)
+        y = wrap(obj.position.y, 0, gl.screen_height)
     else:
         radius = obj.hitbox.radius
-        x = wrap(obj.position.x, -radius, info.current_w + radius)
-        y = wrap(obj.position.y, -radius, info.current_h + radius)
+        x = wrap(obj.position.x, -radius, gl.screen_width + radius)
+        y = wrap(obj.position.y, -radius, gl.screen_height + radius)
     
     obj.position = Vector(x, y)
 
 # Initialize pygame display
 info = pygame.display.Info()
-WINDOWED_SIZE = (1280, 720)
+WINDOWED_SIZE = (gl.screen_width, gl.screen_height)
 is_fullscreen = False
 screen = pygame.display.set_mode(WINDOWED_SIZE, pygame.RESIZABLE)
 pygame.display.set_caption("Space Shooter")
@@ -117,6 +117,7 @@ delay_start_time = None  # Variable to track when the game actually starts
 # Game loop
 while True:
     gl.screen_width, gl.screen_height = screen.get_width(), screen.get_height()
+    gl.player_start_pos = Vector(gl.screen_width / 2, gl.screen_height / 2)
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -132,10 +133,7 @@ while True:
                     gl.game_over = False
                     gl.score = 0
                     gl.game_objects.clear()
-                    player.hits = 0
-                    player.lives = 2
-                    player.position = gl.player_start_pos
-                    player.bullets.clear()
+                    player = Player(gl.player_start_pos, gl.player_color)
                     gl.spawn_obj(player)
                     spawn_asteroids(5)
                     continue
@@ -180,10 +178,6 @@ while True:
             obj.update(gl.FPS)
             clamp_to_screen(obj)
             obj.draw(screen)
-
-        for bullet in player.bullets:
-            bullet.update(gl.FPS)
-            bullet.draw(screen)
     else:
         button_rect = draw_game_over(screen)
 

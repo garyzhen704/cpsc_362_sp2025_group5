@@ -1,10 +1,9 @@
 from vector import Vector
 
 # Game window
-screen_width = 1000
-screen_height = 800
+screen_width = 1280
+screen_height = 720
 score = 0
-
 
 game_over = False
 
@@ -23,6 +22,7 @@ player_start_pos = Vector(screen_width / 2, screen_height / 2)  # Start at scree
 
 # All game objects currently processing
 game_objects = set()
+player_bullets = []
 
 def spawn_obj(obj):
     game_objects.add(obj)
@@ -30,5 +30,7 @@ def spawn_obj(obj):
 def delete_obj(obj):
     if obj in game_objects:
         game_objects.remove(obj)
+    if obj in player_bullets:
+        player_bullets.remove(obj)
 
 player = None
