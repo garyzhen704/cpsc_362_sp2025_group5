@@ -3,7 +3,12 @@
 // socket.io, initialize the socket connection here
 const socket = io('/title');
 
-
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+      // Page was loaded from back-forward cache
+      window.location.reload();
+    }
+  });
 document.addEventListener("DOMContentLoaded", function() {
   console.log("DOM fully loaded and parsed!");
   const hostButton = document.getElementById("host_button");

@@ -333,13 +333,17 @@ button {
     height:50px;
     font-size:12px;
   }
-  .bust_message{
-    background-color: green;
-    color:white;
-    width:50px;
-    height:25px;
-    margin:0px;
-  }
+    .bust_message {
+  background-color: green;
+  color: white;
+  padding: 10px 25px;
+  margin: 0 auto; /* center the whole block if it has a width */
+  text-align: center;
+  border-radius: 4px;
+  font-weight: bold;
+  font-family: sans-serif;
+  display: inline-block; /* or block depending on context */
+}
     </style>
     
 <body>
@@ -351,7 +355,7 @@ button {
         <div class="other_profile1a" id="other_profile2" style="display: block;">
           <img class="ready_mark" id="ready_mark2" src="/blackjack/static/checkmark.png"  style="width:30px; height:30px; display:none;">
           <img class="profile_pic" id="player2-profilepic" style="margin-left:20px; display:none"src="/blackjack/static/cropped image.png">
-          <p class="bust_message" id="result-message2" style="margin-left:50px; visibility: hidden;">BUST!</p>
+          <p class="bust_message" id="result-message2" style="margin-left:23px;visibility: hidden;">BUST!</p>
           <p class="other_username" id="player2-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
           <p class="other_balance"id="player2-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
           <p  class="score" id="player2-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
@@ -360,7 +364,7 @@ button {
         <div class="other_profile1b" id="other_profile3" style="display: block;">
           <img class="ready_mark" id="ready_mark3" src="/blackjack/static/checkmark.png"  style="width:30px; height:30px; display:none;">
           <img class="profile_pic" id="player3-profilepic" style="margin-left:20px; display:none;"src="/blackjack/static/cropped image.png">
-          <p class="bust_message" id="result-message3" style="margin-left:50px; visibility: hidden;">BUST!</p>
+          <p class="bust_message" id="result-message3" style="margin-left:23px; visibility: hidden;">BUST!</p>
           <p class="other_username" id="player3-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
           <p class="other_balance" id="player3-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
           <p  class="score" id="player3-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
@@ -385,7 +389,7 @@ button {
         <div class="other_profile2a" id="other_profile4" style="display: block;">
           <img class="ready_mark" id="ready_mark4" src="/blackjack/static/checkmark.png"  style="width:30px; height:30px; display:none;">
           <img id="player4-profilepic" class="profile_pic" style="margin-left:20px; display:none;"src="/blackjack/static/cropped image.png">
-          <p class="bust_message" id="result-message4" style="margin-left:50px;visibility: hidden;">BUST!</p>
+          <p class="bust_message" id="result-message4" style="margin-left:23px;visibility: hidden;">BUST!</p>
           <p class="other_username" id="player4-username"style="margin-top:2px; margin-bottom:0px; color:white; background-color: grey; display:none;"> Username</p>
           <p class="other_balance" id="player4-balance" style="margin-top:2px; margin-bottom:0px; color:white; background-color: grey; display:none;"> Balance: </p>
           <p  class="score" id="player4-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
@@ -394,7 +398,7 @@ button {
         <div class="other_profile2b" id="other_profile5" style="display: block;">
           <img class="ready_mark" id="ready_mark5" src="/blackjack/static/checkmark.png"  style="width:30px; height:30px; display:none;">
           <img id="player5-profilepic"class="profile_pic" style="margin-left:20px; display:none;"src="/blackjack/static/cropped image.png">
-          <p class="bust_message" id="result-message5" style="margin-left:50px;visibility: hidden;">BUST!</p>
+          <p class="bust_message" id="result-message5" style="margin-left:23px;visibility: hidden;">BUST!</p>
           <p class="other_username" id="player5-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
           <p class="other_balance" id="player5-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
           <p  class="score" id="player5-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
@@ -425,7 +429,7 @@ button {
             <img class="ready_mark" id="ready_mark1" src="/blackjack/static/checkmark.png"  style="width:30px; height:30px; display:none;">
             <img class="profile_pic" id="player1-profilepic" src="/blackjack/static/cropped image.png">
             <div class="profile_info">
-              <p class="bust_message" id="result-message1" style="margin-left:23px;visibility: hidden;">BUST!</p>
+              <p class="bust_message" id="result-message1" style="visibility: hidden;">BUST!</p>
               <p id="player1-balance" class="score" style="padding: 5px 10px; border-radius: 5px; margin: 0;">Balance: </p>
               <p id="player1-currentbet" class="score" style="margin-top:2px;margin-bottom:0px; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
               <p id="player1-username" class="score" style="margin-top:2px;margin-bottom:0px;padding: 5px 10px; border-radius: 5px; margin: 10;"> Username</p>

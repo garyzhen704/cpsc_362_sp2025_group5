@@ -581,9 +581,9 @@ def index():
 def game():
     return render_template('game.html')
 
-@blackjack_bp.route('/title.html')
+@blackjack_bp.route('/title')
 def title():
-    return render_template('title_screen.html')
+    return render_template('blackjack_title.html')
 
 
 game_system = GameSystem()

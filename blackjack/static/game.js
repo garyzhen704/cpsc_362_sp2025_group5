@@ -630,7 +630,7 @@ socket.on('removeUI',function(data){
 
 document.getElementById('leave-button').addEventListener('click', function(){
   socket.disconnect()
-  window.location.href = `/title.html`
+  window.location.href = `/blackjack/title`
 })
 socket.on('error',function(data){
   message = data['message']
