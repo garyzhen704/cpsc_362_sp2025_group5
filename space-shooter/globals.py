@@ -4,6 +4,7 @@ from vector import Vector
 screen_width = 1000
 screen_height = 800
 score = 0
+high_score = 0
 
 
 game_over = False

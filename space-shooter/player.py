@@ -37,6 +37,8 @@ class Player(Object):
         self.hits += 1
         if self.lives == 0:
             globals.game_over = True
+        if globals.score > globals.high_score:
+            globals.high_score = globals.score
 
     def load_frames(self, folder_path):
         frame_files = sorted([f for f in os.listdir(folder_path) if f.endswith('.png')])

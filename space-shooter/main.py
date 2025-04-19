@@ -169,7 +169,7 @@ while True:
 
         # Wait for 3 seconds before spawning asteroids
         if current_time - delay_start_time >= 3:  # Wait for 3 seconds after game starts
-            spawn_interval = 5  # Spawn a new asteroid every 5 seconds
+            spawn_interval = 1  # Spawn a new asteroid every 5 seconds
             
             if current_time - last_spawn_time >= spawn_interval:
                 spawn_asteroids(1)  # Spawn a new asteroid
@@ -190,6 +190,8 @@ while True:
     # Draw score
     score_text = font.render(f"Score: {gl.score}", True, (255, 255, 255))
     screen.blit(score_text, (10, 10))
+    high_score_text = font.render(f"High Score: {gl.high_score}", True, (255, 255, 0))
+    screen.blit(high_score_text, (10, 40))  # Slightly below the score
     lives_text = font.render(f"Lives: {player.lives}", True, (255, 255, 255))
     text_rect = lives_text.get_rect(topright=(gl.screen_width - 10, 10))
     screen.blit(lives_text, text_rect)
