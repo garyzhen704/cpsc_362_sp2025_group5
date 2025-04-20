@@ -7,6 +7,7 @@ from bullet import Bullet  # Import the Bullet class
 import globals
 from asteroid import Asteroid
 
+
 max_speed = 360  # Pixels per second
 acceleration = 15  # Pixels per second squared
 deceleration = 0.5  # Deceleration rate
@@ -42,7 +43,17 @@ class Player(Object):
         self.game_over = False  # Flag to indicate the game is over
         self.lives = 2
 
+        self.shield_image = pygame.image.load("space-shooter/powerups/spr_shield.png").convert_alpha()
+        self.shield_timer = 0  # Add if not already present
+
+        self.shrunk = False
+        self.ship_scale = 1.0
+
+
     def register_hit(self):
+        if self.shield_timer > 0:
+            return
+            
         self.hit_timer = 0
         self.lives -= 1
         self.hits += 1
@@ -93,6 +104,20 @@ class Player(Object):
             self.shoot()
             self.shoot_timer = 0
 
+        if self.shield_timer > 0:
+            self.shield_timer -= 1 /fps
+        else:
+            self.shield_timer = 0
+
+
+        if hasattr(self, 'shrink_timer') and self.shrink_timer > 0:
+            self.ship_scale = 0.5  # Visually scale the ship
+            self.shrink_timer -= 1 / fps
+        else:
+            self.ship_scale = 1.0
+        if self.ship_scale == 1.0:
+            self.hitbox.radius = 8  # Reset to normal if not shrunk
+
     def shoot(self):
         if len(globals.player_bullets) >= MAX_BULLETS:
             oldest_bullet = globals.player_bullets[0]  # Delete the oldest bullet
@@ -112,6 +137,13 @@ class Player(Object):
     def draw(self, surface):
         frame = self.frames[self.current_frame]
 
+        # Scale the sprite based on ship_scale (for shrink power-up)
+        scaled_size = (
+            int(frame.get_width() * self.ship_scale),
+            int(frame.get_height() * self.ship_scale)
+        )
+        frame = pygame.transform.scale(frame, scaled_size)
+
         # Rotate the spaceship based on smoothed angle
         rotated_frame = pygame.transform.rotate(frame, self.angle)
 
@@ -122,6 +154,13 @@ class Player(Object):
         # Center the rotated image
         rect = rotated_frame.get_rect(center=(self.position.x, self.position.y))
         surface.blit(rotated_frame, rect)
+
+        if self.shield_timer > 0:
+            # Scale the shield based on ship_scale too
+            shield_size = int(70 * self.ship_scale)
+            shield_scaled = pygame.transform.scale(self.shield_image, (shield_size, shield_size))
+            shield_rect = shield_scaled.get_rect(center=(self.position.x, self.position.y))
+            surface.blit(shield_scaled, shield_rect)
 
 def get_input_dir() -> Vector:
     dir = Vector(0, 0)

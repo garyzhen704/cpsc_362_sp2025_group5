@@ -4,7 +4,7 @@ import globals
 
 # Bullet constants
 BULLET_SPEED = 700  # Speed of the bullet (pixels per second)
-BULLET_LIFETIME = 0.4  # Lifetime of the bullet (seconds)
+BULLET_LIFETIME = .4  # Lifetime of the bullet (seconds)
 
 class Bullet:
     def __init__(self, pos: Vector, direction: Vector, player_vel: Vector, color):

@@ -5,6 +5,7 @@ screen_width = 1280
 screen_height = 720
 score = 0
 high_score = 0
+best_survival_time = "00:00:000"
 
 game_over = False
 

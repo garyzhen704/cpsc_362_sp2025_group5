@@ -8,24 +8,14 @@ from player import Player
 from asteroid import Asteroid
 import random
 import time
+from powerup import PowerUp
 
 # Font setup
 pygame.init()
 button_font = pygame.font.Font(None, 48)
-font = pygame.font.Font(None, 36) 
+font = pygame.font.Font(None, 24) 
 
-def reset_game():
-    gl.game_objects.clear()
-    gl.score = 0
 
-    # Recreate player
-    player = Player(gl.player_start_pos, gl.player_color)
-    gl.player = player
-    gl.spawn_obj(player)
-
-    # Spawn asteroids again
-    spawn_asteroids(5)
-    return player
 
 def draw_game_over(surface):
     # Dark overlay
@@ -77,6 +67,17 @@ def spawn_asteroids(count=5):
         # Create the asteroid and add it to the game
         asteroid = Asteroid(size, pos, velocity)
         gl.spawn_obj(asteroid)
+def spawn_powerup():
+    # Randomly choose a type of power-up
+    powerup_type = random.choice(PowerUp.TYPES)
+
+    # Randomly spawn position on the screen
+    spawn_x = random.randint(0, gl.screen_width)
+    spawn_y = random.randint(0, gl.screen_height)
+    pos = Vector(spawn_x, spawn_y)
+
+    powerup = PowerUp(pos, powerup_type)
+    gl.spawn_obj(powerup)
 
 def wrap(num, min, max):
     range_size = max - min + 1
@@ -92,6 +93,17 @@ def clamp_to_screen(obj: Object):
         y = wrap(obj.position.y, -radius, gl.screen_height + radius)
     
     obj.position = Vector(x, y)
+
+def get_survival_time():
+    if game_start_time:  # Only calculate if the start time is set
+        elapsed_time_ms = pygame.time.get_ticks() - game_start_time  # Time in milliseconds
+        minutes = elapsed_time_ms // 60000  # Convert to minutes
+        seconds = (elapsed_time_ms % 60000) // 1000  # Convert to seconds
+        milliseconds = (elapsed_time_ms % 1000)  # Remaining milliseconds
+
+        # Return formatted time string
+        return f"{minutes:02}:{seconds:02}:{milliseconds:03}"
+    return "00:00:000"  # Default return when no start time is set
 
 # Initialize pygame display
 info = pygame.display.Info()
@@ -110,9 +122,16 @@ player = Player(gl.player_start_pos, gl.WHITE)
 gl.player = player
 gl.spawn_obj(player)
 
-# Add this at the start of your main loop, outside the loop
-last_spawn_time = time.time()  # Record the start time 
+
+last_spawn_time = time.time()  # Track when the last asteroid was spawned
+last_powerup_time = time.time()  # Track when the last power-up was spawned
+powerup_spawn_interval = 10  # Power-ups spawn every 10 seconds
+spawn_interval = 2  # Spawn a new asteroid every 2 seconds
 delay_start_time = None  # Variable to track when the game actually starts
+game_start_time = None
+final_survival_time = None
+
+
 
 # Game loop
 while True:
@@ -133,9 +152,17 @@ while True:
                     gl.game_over = False
                     gl.score = 0
                     gl.game_objects.clear()
-                    player = Player(gl.player_start_pos, gl.player_color)
-                    gl.spawn_obj(player)
-                    spawn_asteroids(5)
+
+                    
+                    game_start_time = pygame.time.get_ticks()  # Set the start time again if it's None
+                    final_survival_time = None #Resetting final time that shows up in end screen
+
+                    new_player = Player(gl.player_start_pos, gl.player_color)
+                    gl.player = new_player  # Make sure to update the global reference
+                    gl.spawn_obj(new_player)
+
+                    spawn_asteroids(1)
+                    
                     continue
 
         if event.type == KEYDOWN:
@@ -164,31 +191,66 @@ while True:
         # Initialize delay_start_time when the player first starts the game
         if delay_start_time is None:
             delay_start_time = current_time
+            
 
         # Wait for 3 seconds before spawning asteroids
         if current_time - delay_start_time >= 3:  # Wait for 3 seconds after game starts
-            spawn_interval = 1  # Spawn a new asteroid every 5 seconds
+            if game_start_time is None:
+                game_start_time = pygame.time.get_ticks()  # Start survival timer once delay ends
+
+            spawn_interval = 5  # Spawn a new asteroid every 5 seconds
             
             if current_time - last_spawn_time >= spawn_interval:
                 spawn_asteroids(1)  # Spawn a new asteroid
                 last_spawn_time = current_time  # Update the last spawn time
+            
+            # Power-up spawning logic
+            if current_time - last_powerup_time >= powerup_spawn_interval:
+                spawn_powerup()
+                last_powerup_time = current_time  # Update the last power-up spawn time
 
         # Update/draw game objects
         for obj in list(gl.game_objects):
             obj.update(gl.FPS)
             clamp_to_screen(obj)
             obj.draw(screen)
+        # Check if the game has just ended
+        if gl.game_over and final_survival_time is None:
+            final_survival_time = get_survival_time()
+
+            # Compare to best time and update if it's better
+            current_time_ms = pygame.time.get_ticks() - game_start_time
+            best_time_parts = [int(p) for p in gl.best_survival_time.replace(":", "").split()]
+            best_time_ms = int(gl.best_survival_time[0:2]) * 60000 + int(gl.best_survival_time[3:5]) * 1000 + int(gl.best_survival_time[6:9])
+    
+            if current_time_ms > best_time_ms:
+                gl.best_survival_time = final_survival_time
     else:
         button_rect = draw_game_over(screen)
+        if final_survival_time:
+            # Show final survival time
+            
+            time_text = font.render(f"Survived: {final_survival_time} seconds", True, (200, 200, 255))
+            time_rect = time_text.get_rect(center=(gl.screen_width // 2, gl.screen_height // 2 + 80))
+            screen.blit(time_text, time_rect)
 
     # Draw score
     score_text = font.render(f"Score: {gl.score}", True, (255, 255, 255))
     screen.blit(score_text, (10, 10))
     high_score_text = font.render(f"High Score: {gl.high_score}", True, (255, 255, 0))
     screen.blit(high_score_text, (10, 40))  # Slightly below the score
-    lives_text = font.render(f"Lives: {player.lives}", True, (255, 255, 255))
+    lives_text = font.render(f"Lives: {gl.player.lives}", True, (255, 255, 255))
     text_rect = lives_text.get_rect(topright=(gl.screen_width - 10, 10))
     screen.blit(lives_text, text_rect)
+    survival_best_text = font.render(f"Best Time: {gl.best_survival_time}", True, (0, 255, 255))
+    survival_best_rect = survival_best_text.get_rect(topright=(gl.screen_width - 10, text_rect.bottom + 5))
+    screen.blit(survival_best_text, survival_best_rect)
+
+    # Show survival time while playing
+    if not gl.game_over:
+        survival_time = get_survival_time()
+        time_text = font.render(f"Time: {survival_time}s", True, (200, 200, 255))
+        screen.blit(time_text, (10, 70))
 
     pygame.display.update()
     fps_clock.tick(gl.FPS)
