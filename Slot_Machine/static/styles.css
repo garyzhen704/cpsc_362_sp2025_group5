@@ -1,0 +1,201 @@
+/* Basic reset for margin and height */
+body,
+html {
+    height: 100%;
+    margin: 0;
+}
+
+/* container for slot machine reels/display */
+.slot-machine-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    padding-top: 125px;
+}
+
+/* container for the balance/current_bet/payout display */
+.balance-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+    font-size: 30px;
+}
+
+/* container for the default bet buttons and spin button */
+.button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+}
+
+.button-container button {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* slot machine design */
+.slots {
+    width: calc(5.75 * 79px);
+    height: calc(3 * 79px);
+    border: 5px solid black;
+    padding: calc(0.3 * 79px);
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+/* reel design */
+.reel {
+    border: 5px solid black;
+    width: 79px;
+    height: calc(3 * 79px);
+    overflow: hidden;
+    position: relative;
+}
+
+/* inside reel contents */
+.reel-inner {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    transition: top 0.8s ease-out;
+    /* Smooth spinning transition */
+}
+
+/* symbol display inside reels */
+.slot-item {
+    width: 79px;
+    height: 79px;
+    text-align: center;
+    font-size: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-bottom: 1px solid black;
+}
+
+/* Button hover effect */
+.button-container button:hover {
+    background-color: darkred;
+    /* Darker blue when hovered */
+}
+
+#spinButton {
+    background-color: green;
+    /* Green background */
+    color: white;
+    /* White text */
+    border: none;
+    /* No border */
+    cursor: pointer;
+    /* Change cursor to pointer on hover */
+}
+
+#spinButton:hover {
+    background-color: darkgreen;
+    /* Darker green when hovered */
+}
+
+#infoButton {
+    background-color: gold;
+    color: black;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 3px solid black;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+#infoButton:hover {
+    background-color: darkgoldenrod;
+}
+
+.infoPopUp {
+    display: none;
+    position: fixed;
+    top: 50%;
+    /* Position it halfway down the page */
+    left: 50%;
+    /* Position it halfway across the page */
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 300px;
+}
+
+.popup-content {
+    background-color: black;
+    color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 700px;
+    height: 100%;
+    position: relative;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#edm-gif {
+    position: fixed;
+    top: 0;
+    width: 0;
+    height: 100vh;
+    width: 100vw;
+    object-fit: cover;
+    z-index: -1;
+
+}
+
+#pause {
+    background-color: black;
+}
+
+.volume-control {
+    display: none;
+    position: fixed;
+    top: 5px;
+    right: 45px;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    background-color: black;
+}
+
+input[type="range"] {
+    width: 100px;
+}
+
+#settings {
+    position: fixed;
+    background-color: black;
+    right: 5px;
+    top: 5px;
+}
