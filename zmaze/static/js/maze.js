@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Start a new game
     function startNewGame() {
-        fetch('/maze/new-game', {
+        fetch('/zmaze/new-game', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function movePlayer(direction) {
         if (completed) return;
         
-        fetch('/maze/move', {
+        fetch('/zmaze/move', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Load next level
     function loadNextLevel() {
-        fetch('/maze/next-level', {
+        fetch('/zmaze/next-level', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

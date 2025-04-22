@@ -1,5 +1,5 @@
-from models.maze_generator import MazeGenerator
-from models.player import MazePlayer
+from zmaze.models.maze_generator import MazeGenerator
+from zmaze.models.player import MazePlayer
 
 class MazeGame:
     def __init__(self,width=21,height=21):
