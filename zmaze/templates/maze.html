@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Game</title>
+    <link rel="stylesheet" href="{{ url_for('maze.static', filename='css/maze.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Maze Game</h1>
+        
+        <div class="game-info">
+            <div id="level">Level: 1</div>
+            <div id="moves">Moves: 0</div>
+        </div>
+        
+        <div class="maze-container">
+            <div id="maze"></div>
+        </div>
+        
+        <div class="controls">
+            <div class="arrow-controls">
+                <button id="up">↑</button>
+                <div class="horizontal-controls">
+                    <button id="left">←</button>
+                    <button id="right">→</button>
+                </div>
+                <button id="down">↓</button>
+            </div>
+        </div>
+        
+        <div class="completion-message" id="completion-message">
+            <h2>Level Complete!</h2>
+            <p>You completed the maze in <span id="completion-moves">0</span> moves.</p>
+            <button id="next-level">Next Level</button>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('maze.static', filename='js/maze.js') }}"></script>
+</body>
+</html>
