@@ -1,3 +1,4 @@
+// Formal Technical Review: Brick Breaker Game
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
