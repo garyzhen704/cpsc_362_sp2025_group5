@@ -12,7 +12,7 @@ html {
     align-items: center;
     width: 100%;
     justify-content: center;
-    padding-top: 125px;
+    padding-top: 175px;
 }
 
 /* container for the balance/current_bet/payout display */
@@ -99,18 +99,13 @@ html {
 
 #spinButton {
     background-color: green;
-    /* Green background */
     color: white;
-    /* White text */
     border: none;
-    /* No border */
     cursor: pointer;
-    /* Change cursor to pointer on hover */
 }
 
 #spinButton:hover {
     background-color: darkgreen;
-    /* Darker green when hovered */
 }
 
 #infoButton {

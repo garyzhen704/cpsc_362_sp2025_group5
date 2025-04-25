@@ -11,7 +11,7 @@
 <body>
     <audio id="backgroundAudio" src="{{ url_for('static', filename='background_music.m4a') }}" preload="auto"
         loop></audio>
-    <audio id="spinAudio" src="{{ url_for('static', filename='spin_audio.m4a') }}" preload="auto"></audio>
+    <audio id="spinAudio" src="{{ url_for('static', filename='BOOM.mp3') }}" preload="auto"></audio>
     <div class="button-container">
         <button id="settings">⚙</button>
     </div>
@@ -19,7 +19,7 @@
         <label for="volumeSlider">Music Volume</label>
         <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5"><br>
 
-        <label for="spinVolumeSlider">Sound Effects</label>
+        <label for="spinVolumeSlider" style="margin-right: 63px;">SFX</label>
         <input type="range" id="spinVolumeSlider" min="0" max="1" step="0.01" value="0.5">
     </div>
     <div class="slot-machine-container">
@@ -103,11 +103,11 @@
 
             <div class="rules-page" id="page-2" style="display: none;">
                 <h2>Winning Lines</h2>
-                <p>1. 5 of a kind in a row</p>
-                <p>2. 5 of a kind in a V pattern</p>
-                <p>3. 5 of a kind in a caret pattern</p>
-                <p>4. 3 of a kind in a row</p>
-                <p>5. 3 or more dice pay flat $100</p>
+                <p>5 of a kind in a row</p>
+                <p>5 of a kind in a V pattern</p>
+                <p>5 of a kind in a caret pattern</p>
+                <p>3 of a kind in a row</p>
+                <p>3 or more dice pay flat $100</p>
             </div>
 
             <div class="rules-page" id="page-3" style="display: none;">
