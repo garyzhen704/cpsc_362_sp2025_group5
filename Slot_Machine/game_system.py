@@ -1,8 +1,8 @@
-from paylines import Paylines
-from player import Player
-from reels import Reels
-from symbols import Symbols
-from payouts import Payouts
+from Slot_Machine.paylines import Paylines
+from Slot_Machine.player import Player
+from Slot_Machine.reels import Reels
+from Slot_Machine.symbols import Symbols
+from Slot_Machine.payouts import Payouts
 
 class GameSystem:
     def __init__(self, player): # initialize objects for all needed classes

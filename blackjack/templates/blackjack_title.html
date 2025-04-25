@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      title screen
+    </title>
+    <style>
+      button{
+        display:block;
+        margin-top:15px;
+        padding:25px;
+        border-radius:25px;
+        cursor:pointer;
+        background-color: orange;
+        
+        width:200px;
+      }
+      .title_div{
+        margin-left:-45px;
+        margin-bottom:50px;
+      }
+      div{
+        width:200px;
+        margin:auto;
+        
+        
+      }
+    
+    </style>
+  </head>
+  <body style="background-color: black;">
+    <div class="game-wrapper">
+
+    
+    <div class="title_div">
+      <p style="width: 350px; font-size:xx-large; color:white; text-align: left;">Welcome to BlackJack!</p>
+    </div>
+
+    <div class="selections">
+    <button id="host_button" class="host-button">
+      Host a Game
+    </button>
+    <button id= "join_button" class="Join-button">
+      Join a Game
+    </button>
+    <button id = "join_code_button">
+      Enter Join Code
+    </button>
+  
+    </div>
+  </div>
+<!--
+    
+-->
+<script>
+  function scaleGame() {
+    const game = document.querySelector('.game-wrapper');
+    const scaleX = window.innerWidth / 1280; // Assume 1280px is the base width
+    const scaleY = window.innerHeight / 720; // Assume 720px is the base height
+    const scale = Math.min(scaleX, scaleY); // Scale based on the smaller ratio
+
+    // Apply the scaling transformation
+    game.style.transform = `scale(${scale})`;
+    game.style.transformOrigin = 'top left'; // Ensures scaling happens from the top-left corner
+  }
+
+  window.addEventListener('resize', scaleGame);
+  window.addEventListener('load', scaleGame);
+</script>
+    <script src="https://cdn.socket.io/4.1.3/socket.io.min.js"></script>
+    <script src="{{ url_for('blackjack.static', filename='title_screen.js') }}"></script>
+  </body>
+
+</html>

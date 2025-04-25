@@ -1,0 +1,148 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.maze-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#maze {
+    display: grid;
+    grid-template-columns: repeat(21, 30px);
+    grid-template-rows: repeat(21, 30px);
+    gap: 0;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+}
+
+.wall {
+    background-color: #333;
+    background-image: url('../assets/brick.png');
+    background-size: cover;
+}
+
+.path {
+    background-color: #fff;
+}
+
+.player {
+    background-image: url('../assets/player.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.end {
+    background-color: #28a745;
+    background-image: url('../assets/vine.png');
+    background-size: cover;
+}
+
+.controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.arrow-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.horizontal-controls {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.completion-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    display: none;
+    z-index: 1000;
+}
+
+.completion-message h2 {
+    color: #28a745;
+    margin-bottom: 10px;
+}
+
+.completion-message p {
+    margin-bottom: 20px;
+}
+
+#next-level {
+    background-color: #28a745;
+}
+
+#next-level:hover {
+    background-color: #218838;
+}

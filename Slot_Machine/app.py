@@ -1,17 +1,18 @@
-from flask import Flask, request, jsonify, render_template
-from player import Player
-from game_system import GameSystem
+from flask import Flask, request, jsonify, render_template, Blueprint
+from Slot_Machine.player import Player
+from Slot_Machine.game_system import GameSystem
 
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('slot_display.html')
+slot_bp = Blueprint('slot', __name__, template_folder='templates', static_folder='static')
 
 player = Player()
 game_system = GameSystem(player)
 
-@app.route('/start', methods=['POST'])
+@slot_bp.route('/')
+def slot_home():
+    return render_template('slot_display.html')
+
+
+@slot_bp.route('/start', methods=['POST'])
 def start_game():
     game_system.start_game()
 
@@ -20,9 +21,9 @@ def start_game():
         'current_bet': player.current_bet
     })
 
-@app.route('/place_bet', methods=['POST'])
+@slot_bp.route('/place_bet', methods=['POST'])
 def place_bet():
-    data = request.get_json()  # This reads the JSON data from the body
+    data = request.get_json()  
     bet_amount = data.get('bet_amount', 0)
 
     success = player.place_bet(bet_amount)
@@ -33,7 +34,7 @@ def place_bet():
         'current_bet': player.current_bet
     })
 
-@app.route("/spin", methods=["POST"])
+@slot_bp.route("/spin", methods=["POST"])
 def spin():
     # Spin the reels and determine the result
     result = game_system.spin_reels()
@@ -50,6 +51,3 @@ def spin():
         'payout': payout,
         'balance': player.check_balance(),
     })
-
-if __name__ == "__main__":
-    app.run(debug=True)

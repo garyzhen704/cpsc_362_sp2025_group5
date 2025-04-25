@@ -1,4 +1,4 @@
-from player import Player
+from Slot_Machine.player import Player
 
 class Payouts:
     def __init__(self):

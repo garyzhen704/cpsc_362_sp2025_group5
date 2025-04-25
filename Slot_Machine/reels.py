@@ -1,5 +1,5 @@
 import random
-from symbols import Symbols
+from Slot_Machine.symbols import Symbols
 
 class Reels:
     def __init__(self, symbols, reel_length=30, reels_count=5, reel_size=3):

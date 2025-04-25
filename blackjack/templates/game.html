@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Game</title>
+    <!-- style Notes
+     other_hands should be set to flex after none.
+    -->
+    <style>
+      html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: black;
+    }
+
+    .game-wrapper {
+      width: 1280px;
+      height: 720px;
+      transform-origin: top left;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+
+body {
+  margin:0;
+  background-color:black;
+  background-size: cover;
+  background-position: center center;
+  max-height:100vh;
+}
+.table_div{
+width:800px;
+height:500px;
+display:inline-block;
+object-fit: cover;
+position:relative;
+margin-top:0px;
+
+margin:auto;
+}
+.poker_table{
+  display:inline-block;
+  height:100%;
+  width:100%;
+}
+.dealer_hand{
+  height: 76px;
+  width:250px;
+  position: absolute;
+  top: 22%;
+  left:34%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+  background-color:none;
+}
+.dealer_hand img{
+  width: 42px;  /* Adjust the width to your preference */
+    height: auto;  /* Keep the aspect ratio intact */
+    object-fit: contain;
+
+}
+.player_hand{
+  height:76px;
+  width:300px;
+  background-color:none;
+  position:absolute;
+  top: 74%;
+  left:33%;
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  gap: 10px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+.player_hand img{
+  width: 42px;  /* Adjust the width to your preference */
+    height: auto;  /* Keep the aspect ratio intact */
+    object-fit: contain;
+}
+.other_hand2{
+  height:76px;
+  width:225px;
+  position:absolute;
+  display:flex;
+  flex-wrap: wrap;
+  top: 10%;
+  left:4%;
+  gap: 10px;
+  margin: 10px 0;
+  background-color: none;
+  justify-content: flex-start;
+}
+.other_hand2 img{
+  width: 42px;  /* Adjust the width to your preference */
+    height: auto;  /* Keep the aspect ratio intact */
+    object-fit: contain;
+}
+.other_hand3{
+  height:76px;
+  width:225px;
+  position:absolute;
+  display:flex;
+  top: 54%;
+  left:4%;
+  gap: 10px;
+  margin: 10px 0;
+  background-color: none;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.other_hand3 img{
+  width: 42px;  /* Adjust the width to your preference */
+    height: auto;  /* Keep the aspect ratio intact */
+    object-fit:contain
+}
+.other_hand4{
+  height:76px;
+  width:225px;
+  position:absolute;
+  display:flex;
+  top: 10%;
+  right:10%;
+  gap: 10px;
+  margin: 10px 0;
+  background-color: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.other_hand4 img{
+  width: 42px;  /* Adjust the width to your preference */
+    height: auto;  /* Keep the aspect ratio intact */
+    object-fit: contain;
+}
+
+.other_hand5{
+  height:76px;
+  width:225px;
+  position:absolute;
+  display:flex;
+  flex-wrap: wrap;
+  top: 54%;
+  right:8%;
+  gap: 10px;
+  margin: 10px 0;
+  background-color: none;
+  justify-content: flex-end;
+}
+.other_hand5 img{
+  width: 42px;  /* Adjust the width to your preference */
+    height: auto;  /* Keep the aspect ratio intact */
+    object-fit:contain
+}
+
+button {
+    padding: 5px 10px;
+    margin: 5px;
+    font-size: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+}
+.control_div{
+  display: inline-block;
+  vertical-align: top;
+  align-items: center;
+  margin-top: 10px;
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 10px;
+  width: 50%;
+}
+.profile_pic{
+  width:50px;
+  height:50px;
+
+}
+.score{
+  display: block;
+  background-color: rgba(255, 255, 255, 0.858);
+  text-align: center;
+  font-size:10px;
+}
+
+
+.card img{
+  width: 60px;  /* Adjust the width to your preference */
+    height: auto;  /* Keep the aspect ratio intact */
+    margin: 5px;
+    display:flex;
+}
+.chat-window {
+    width: 300px;
+    height: 220px;
+    
+    
+    border: 1px solid black;
+    display: inline-block;
+    bottom: 20px;
+    right: 20px;
+    background-color: #f0f0f0ab;
+  }
+  .chat-message {
+  padding: 5px;
+  margin: 5px 0;
+  background-color: #e1ffc7;
+  border-radius: 5px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+  #chat-messages {
+    height: 170px;
+  overflow-y: scroll;
+  overflow-x: hidden; /* 👈 prevent sideways scrolling */
+  padding: 5px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  }
+  #message-input {
+    width: 227px;
+    padding: 5px;
+    box-sizing: border-box;
+    display: inline-block;
+    
+  }
+  .chat-button {
+    margin:0px;
+    padding: 8px 20px;
+    background-color: #4CAF50;
+    display: inline-block;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  .input_bar_div{
+
+  }
+  .profile_info{
+    width:100px;
+
+  }
+  .holds_profiles1{
+    display:inline-block;
+    height:400px;
+    width:100px;
+    vertical-align: top;
+    margin-top:50px;
+    margin-right:50px;
+    margin-left:50px;
+  }
+  .holds_profiles2{
+    display:inline-block;
+    height:400px;
+    width:100px;
+    vertical-align: top;
+    margin-top:50px;
+    margin-left:5px;
+  }
+  .profile_table_container{
+    width:100%;
+    display:block;
+  }
+  .other_profile1a{
+    display: block;
+    position: relative;
+    width:150px;
+    height:140px;
+    left:0%;
+    top:0%
+  }
+  .other_profile1b{
+    display: block;
+    position: relative;
+    width:140px;
+    height:150px;
+    left:0%;
+    top:35%
+  }
+  .other_profile2a{
+    display: block;
+    position: relative;
+    background-color: black;
+    width:150px;
+    height:140px;
+    left:0%;
+    top:0%;
+  }
+  .other_profile2b{
+    display: block;
+    position: relative;
+    background-color: black;
+    width:140px;
+    height:150px;
+    left:0%;
+    top:35%
+
+  }
+  .other_info{
+    background-color: green;
+    height:30px;
+    width:50px;
+  }
+  .room_number{
+    background-color:orange;
+    padding:10px;
+    color:black;
+    position:absolute;
+    left:90%;
+    top:-1%;
+    border-radius:5px;
+  }
+  .leave_button{
+    display:block;
+    background-color:orange;
+    color:black;
+    padding:10px;
+    color:black;
+    position:absolute;
+    left:90%;
+    top:93%;
+    border-radius:5px;
+    width:120px;
+    height:50px;
+    font-size:12px;
+  }
+    .bust_message {
+  background-color: green;
+  color: white;
+  padding: 10px 25px;
+  margin: 0 auto; /* center the whole block if it has a width */
+  text-align: center;
+  border-radius: 4px;
+  font-weight: bold;
+  font-family: sans-serif;
+  display: inline-block; /* or block depending on context */
+}
+    </style>
+    
+<body>
+  <div class="game-wrapper">
+    <div class="profile_table_container">
+  
+      <p class="room_number" id="room-number">Room#:</p>
+      <div class="holds_profiles1">
+        <div class="other_profile1a" id="other_profile2" style="display: block;">
+          <img class="ready_mark" id="ready_mark2" src="/blackjack/static/checkmark.png"  style="width:30px; height:30px; display:none;">
+          <img class="profile_pic" id="player2-profilepic" style="margin-left:20px; display:none"src="/blackjack/static/cropped image.png">
+          <p class="bust_message" id="result-message2" style="margin-left:23px;visibility: hidden;">BUST!</p>
+          <p class="other_username" id="player2-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
+          <p class="other_balance"id="player2-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
+          <p  class="score" id="player2-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
+          <p  class="score" id="result2" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
+        </div>
+        <div class="other_profile1b" id="other_profile3" style="display: block;">
+          <img class="ready_mark" id="ready_mark3" src="/blackjack/static/checkmark.png"  style="width:30px; height:30px; display:none;">
+          <img class="profile_pic" id="player3-profilepic" style="margin-left:20px; display:none;"src="/blackjack/static/cropped image.png">
+          <p class="bust_message" id="result-message3" style="margin-left:23px; visibility: hidden;">BUST!</p>
+          <p class="other_username" id="player3-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
+          <p class="other_balance" id="player3-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
+          <p  class="score" id="player3-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
+          <p  class="score" id="result3" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
+          
+        </div>
+    
+      </div>
+      <div id='table' class="table_div">
+        <p id='dealer_name'style="position:absolute; top:11%; left:46%; display:''; width:50px; height:25px;color:yellow; background-color: none;">Dealer</p>
+       <img  class="poker_table" src="{{url_for('static', filename = 'noname-removebg-preview.png')}}"> 
+             <!-- All players' cards will be shown here -->
+        <div class="other_hand2" class="card" id="player2-cards" style="display:none;"></div>
+        <div class="other_hand3" class="card" id="player3-cards"style="display:none;"></div>
+        <div class="other_hand4" class="card" id="player4-cards"style="display:none;"></div>
+        <div class="other_hand5" class="card" id="player5-cards"style="display:none;"></div>
+       
+       <div class="dealer_hand" class="card" id="dealer"></div>
+       <div class=player_hand class="card" id="player" > </div>
+      </div>
+      <div class="holds_profiles2">
+        <div class="other_profile2a" id="other_profile4" style="display: block;">
+          <img class="ready_mark" id="ready_mark4" src="/blackjack/static/checkmark.png"  style="width:30px; height:30px; display:none;">
+          <img id="player4-profilepic" class="profile_pic" style="margin-left:20px; display:none;"src="/blackjack/static/cropped image.png">
+          <p class="bust_message" id="result-message4" style="margin-left:23px;visibility: hidden;">BUST!</p>
+          <p class="other_username" id="player4-username"style="margin-top:2px; margin-bottom:0px; color:white; background-color: grey; display:none;"> Username</p>
+          <p class="other_balance" id="player4-balance" style="margin-top:2px; margin-bottom:0px; color:white; background-color: grey; display:none;"> Balance: </p>
+          <p  class="score" id="player4-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
+          <p  class="score" id="result4" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
+        </div>
+        <div class="other_profile2b" id="other_profile5" style="display: block;">
+          <img class="ready_mark" id="ready_mark5" src="/blackjack/static/checkmark.png"  style="width:30px; height:30px; display:none;">
+          <img id="player5-profilepic"class="profile_pic" style="margin-left:20px; display:none;"src="/blackjack/static/cropped image.png">
+          <p class="bust_message" id="result-message5" style="margin-left:23px;visibility: hidden;">BUST!</p>
+          <p class="other_username" id="player5-username" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Username</p>
+          <p class="other_balance" id="player5-balance" style="margin-top:2px; margin-bottom:0px; color:white; display:none; background-color: grey;"> Balance: </p>
+          <p  class="score" id="player5-currentbet" style="margin-top:2px; margin-bottom:0px; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
+          <p  class="score" id="result5" style="background-color:green; display:none; padding: 5px 10px; border-radius: 5px; margin: 10;">Result</p>
+        </div>
+      </div>
+    </div>
+    
+    
+      
+    
+    
+      <div class="chat-window">
+        <div id="chat-messages">
+          <!-- Chat messages will go here -->
+        </div>
+        <div class="input_bar_div">
+          <input type="text" id="message-input" placeholder="Type your message...">
+          <button id="send-button" class="chat-button">Send</button>
+        </div>
+        <button class='leave_button' id="leave-button"> Leave Game</button>
+          
+      </div>
+       
+      <div id="controls" class="control_div">
+        <div id="betting-controls" style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 10px; width: 100%;">
+          <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 5px;">
+            <img class="ready_mark" id="ready_mark1" src="/blackjack/static/checkmark.png"  style="width:30px; height:30px; display:none;">
+            <img class="profile_pic" id="player1-profilepic" src="/blackjack/static/cropped image.png">
+            <div class="profile_info">
+              <p class="bust_message" id="result-message1" style="visibility: hidden;">BUST!</p>
+              <p id="player1-balance" class="score" style="padding: 5px 10px; border-radius: 5px; margin: 0;">Balance: </p>
+              <p id="player1-currentbet" class="score" style="margin-top:2px;margin-bottom:0px; padding: 5px 10px; border-radius: 5px; margin: 10;">Current Bet: 0</p>
+              <p id="player1-username" class="score" style="margin-top:2px;margin-bottom:0px;padding: 5px 10px; border-radius: 5px; margin: 10;"> Username</p>
+            </div>
+            
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 5px;">
+            <input type="number" id="bet-amount" min="1" value="10" style="width: 80px; padding: 5px; border-radius: 5px;">
+            <button id="place-bet-button" >Place Bet</button>
+          </div>
+        </div>
+        <div id ='game-buttons'style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+          <p id='result1' style="display:none; background-color: red; width:50px; height:40px;"></p>
+          <button id="hit-button" >Hit</button>
+          <button id="stand-button" >Stand</button>
+          <button id="double-button"  >Double Down</button>
+        </div>
+      </div>
+
+
+  </div>
+
+
+
+  <script>
+    function scaleGame() {
+      const game = document.querySelector('.game-wrapper');
+      const scaleX = window.innerWidth / 1280;
+      const scaleY = window.innerHeight / 720;
+      const scale = Math.min(scaleX, scaleY);
+
+      game.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', scaleGame);
+    window.addEventListener('load', scaleGame);
+  </script>
+  <script>
+    // In the HTML file, dynamically set the URL to a JS variable
+    const xmarkUrl = "{{ url_for('static', filename='xmark.png') }}";
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.min.js"></script>
+  <script src="{{ url_for('blackjack.static', filename='game.js') }}"></script>
+  
+
+</body>
+
+</html>

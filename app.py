@@ -1,59 +1,40 @@
-from flask import Flask, render_template, jsonify, request
-from game_system import GameSystem
-from card import Card
+from flask import Flask, render_template, redirect, url_for
+from blackjack.app import blackjack_bp  #Blackjack Blueprint
+from flask_socketio import SocketIO
+from blackjack.app import TitleNamespace, ScreenNamespace
+from zmaze.routes.maze_routes import maze_bp  # Import Zmaze Blueprint
+from Slot_Machine.app import slot_bp
+import os  # For debugging
+
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'  # Required for zmaze session management
 
-# Initialize the game system
-game_system = GameSystem()
+# Debug - print template folders
+print("Main app template folder:", os.path.abspath(app.template_folder))
+zmaze_template_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'zmaze', 'templates')
+print("ZMaze template folder:", zmaze_template_folder)
+
+socketio = SocketIO(app)
+
+app.register_blueprint(blackjack_bp, url_prefix='/blackjack') # Register the Blackjack Blueprint
+app.register_blueprint(maze_bp, url_prefix='/zmaze') # Register the Zmaze Blueprint
+app.register_blueprint(slot_bp, url_prefix='/slotmachine')
+
+socketio.on_namespace(TitleNamespace('/title')) # added
+socketio.on_namespace(ScreenNamespace('/game_screen')) #added
 
 @app.route('/')
-def index():
-    # Render the main HTML page
-    return render_template('index.html')
+def home():
+    return render_template('home.html')  # Serve the homepage
 
-@app.route('/start', methods=['POST'])
-def start_game():
-    # Start a new game
-    game_system.startGame()
-    player_hand = [card.to_dict() for card in game_system.players[0].hand.cards]
-    dealer_hand = [card.to_dict() for card in game_system.players[1].hand.cards]
-    return jsonify({
-        'player_hand': player_hand,
-        'dealer_hand': dealer_hand,
-        'deck': [card.to_dict() for card in game_system.deck.cards]
-    })
-    
-@app.route('/hit', methods=['POST'])
-def hit():
-    # Handle the player's "hit" action
-    data = request.json
-    game_system.deck.cards = [Card.from_dict(card) for card in data['deck']]
-    game_system.players[0].hand.cards = [Card.from_dict(card) for card in data['player_hand']]
-    game_system.processAction(game_system.players[0], 'hit')
-    player_hand = [card.to_dict() for card in game_system.players[0].hand.cards]
-    return jsonify({
-        'player_hand': player_hand,
-        'deck': [card.to_dict() for card in game_system.deck.cards],
-        'player_value': game_system.players[0].hand.getValue()
-    })
+@app.route('/brick-breaker')
+def brick_breaker():
+    return render_template('brick_breaker.html')  # Brick Breaker page
 
-@app.route('/stand', methods=['POST'])
-def stand():
-    # Handle the player's "stand" action
-    data = request.json 
-    game_system.deck.cards = [Card.from_dict(card) for card in data['deck']]
-    game_system.players[0].hand.cards = [Card.from_dict(card) for card in data['player_hand']]
-    game_system.players[1].hand.cards = [Card.from_dict(card) for card in data['dealer_hand']]
-    game_system.processAction(game_system.players[0], 'stand')
-    game_system.dealerPlay()
-    dealer_hand = [card.to_dict() for card in game_system.players[1].hand.cards]
-    return jsonify({
-        'dealer_hand': dealer_hand,
-        'dealer_value': game_system.players[1].hand.getValue(),
-        'player_value': game_system.players[0].hand.getValue(),
-        'result': game_system.determineWinner()
-    })
+@app.route('/zmaze')
+def zmaze():
+    return redirect(url_for('maze.maze_page'))  # Redirect to the Zmaze blueprint route
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)

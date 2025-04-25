@@ -128,9 +128,7 @@ html {
     display: none;
     position: fixed;
     top: 50%;
-    /* Position it halfway down the page */
     left: 50%;
-    /* Position it halfway across the page */
     transform: translate(-50%, -50%);
     width: 500px;
     height: 300px;

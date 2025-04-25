@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fullerton Funhouse Inc.</title>
+  <link rel="stylesheet" href="/static/css/home.css" />
+</head>
+<body>
+
+  <!-- Canvas Background -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Header -->
+    <header class="site-header">
+      <h1>Fullerton Funhouse Inc.</h1>
+    </header>
+
+    <!-- Game Grid -->
+    <section class="game-gallery">
+      <!-- Game 1 -->
+      <div class="game-card">
+        <img src="{{ url_for('static', filename='images/BrikBrakeTH.png') }}" alt="Game 1">
+        <h3>Brick Breaker</h3>
+        <p>Smash bricks, collect power-ups, and aim for the highest score.</p>
+        <a href="/brick-breaker">Play Now</a>
+      </div>
+
+      <!-- Game 2 -->
+      <div class="game-card">
+        <img src="{{ url_for('static', filename='images/blackjackTH.png') }}" alt="Game 2">
+        <h3>BlackJack</h3>
+        <p>The classic card game that never goes out of style</p>
+        <a href="/blackjack/">Play Now</a>
+      </div>
+
+      <!-- Game 3 -->
+      <div class="game-card">
+        <img src="{{ url_for('static', filename='images/zmazeTH.png') }}" alt="ZMaze Game">
+        <h3>ZMaze</h3>
+        <p>Navigate through a challenging maze game with increasing difficulty</p>
+        <a href="/zmaze/maze">Play Now</a>
+      </div>
+
+      <!-- Game 4 -->
+      <div class="game-card">
+        <img src="" alt="Game 4">
+        <h3>Funhouse Escape</h3>
+        <p>Puzzle-based escape game inside a surreal funhouse.</p>
+        <a href="#">Play Now</a>
+      </div>
+
+      <!-- Game 5 -->
+      <div class="game-card">
+        <img src="{{ url_for('static', filename='images/slotmachine.png') }}" alt="Game 5">
+        <h3>Slot Machine</h3>
+        <p>You're only one spin away from a max win</p>
+        <a href="/slotmachine/">Play Now</a>
+      </div>
+    </section>
+  </div>
+
+  <script src="/static/home.js"></script>
+</body>
+</html>

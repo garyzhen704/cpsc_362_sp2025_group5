@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", async function () {
       const betAmount = parseFloat(this.dataset.bet, 10) * denominations[currentBetMultiplier];
 
-      const response = await fetch("/place_bet", {
+      const response = await fetch("/slotmachine/place_bet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bet_amount: betAmount })
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Create an array of spinning symbols (extend for a longer effect)
     let spinningSymbols = [];
-    const possibleSymbols = ["🍒", "🍋", "🍉", "🍊", "🍓", "🔔", "💎", "🌟", "🎲"]; // Add more variety
+    const possibleSymbols = ["🍒", "🍋", "🍉", "🍊", "🍓", "🔔", "💎", "🌟", "🎲"]; 
     for (let i = 0; i < 30; i++) { // Adjust for a longer spin
       spinningSymbols.push(possibleSymbols[Math.floor(Math.random() * possibleSymbols.length)]);
     }
@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
     subtractBet(balance - currentBet);
     spinButton.disabled = true;
 
-    const response = await fetch("/spin", { method: "POST" });
+    const response = await fetch("/slotmachine/spin", { method: "POST" });
     const data = await response.json();
 
     reels.forEach((reel, index) => {
