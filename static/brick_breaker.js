@@ -204,6 +204,11 @@ function collisionDetection() {
     }
 }
 
+function spawnPowerUp(x, y) { 
+    const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+    powerUps.push({x: x, y: y, type: type});
+}
+
 function collectPowerUps() {
     powerUps.forEach((power, index) => {
         if (
