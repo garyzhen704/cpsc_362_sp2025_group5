@@ -7,7 +7,7 @@ import globals
 import player
 
 POWERUP_RADIUS = 15
-POWERUP_DURATION = 8  # seconds for temporary effects
+POWERUP_DURATION = 5  # seconds for temporary effects
 
 class PowerUp(Object):
     TYPES = ['life', 'fast_bullets', 'shield', 'shrink']
@@ -21,6 +21,7 @@ class PowerUp(Object):
     def __init__(self, pos: Vector, powerup_type: str):
         super().__init__(POWERUP_RADIUS, pos, Vector(0, 0), self.COLORS[powerup_type])
         self.type = powerup_type
+        self.spawn_time = pygame.time.get_ticks()
 
         # Load the frames from the folder
         self.frames = self.load_frames(powerup_type)
@@ -44,6 +45,11 @@ class PowerUp(Object):
         if self.animation_timer >= self.animation_speed:
             self.animation_timer = 0
             self.frame_index = (self.frame_index + 1) % len(self.frames)
+
+        current_time = pygame.time.get_ticks()
+        if (current_time - self.spawn_time) / 1000 >= POWERUP_DURATION:  # Check if it exceeds the lifespan
+            globals.delete_obj(self)  # Remove the power-up if it's expired
+            return  # Stop further updates for this power-up
 
         # Check if the power-up is picked up
         if self.hitbox.get_collisions():

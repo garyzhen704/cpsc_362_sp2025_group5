@@ -105,6 +105,19 @@ def get_survival_time():
         return f"{minutes:02}:{seconds:02}:{milliseconds:03}"
     return "00:00:000"  # Default return when no start time is set
 
+def get_dynamic_spawn_interval():
+    """Calculate the dynamic spawn interval based on the time survived."""
+    if game_start_time is None:
+        return SPAWN_INTERVAL_START
+
+    elapsed_time = (pygame.time.get_ticks() - game_start_time) / 1000  # Elapsed time in seconds
+
+    # Decrease spawn rate (interval) over time until it hits the minimum value
+    new_interval = max(SPAWN_INTERVAL_MIN, SPAWN_INTERVAL_START - (elapsed_time * SPAWN_INTERVAL_DECAY))
+
+    return new_interval
+
+
 # Initialize pygame display
 info = pygame.display.Info()
 WINDOWED_SIZE = (gl.screen_width, gl.screen_height)
@@ -122,11 +135,16 @@ player = Player(gl.player_start_pos, gl.WHITE)
 gl.player = player
 gl.spawn_obj(player)
 
+# Constants for spawn rate control
+SPAWN_INTERVAL_START = 8  # Start at 8 seconds
+SPAWN_INTERVAL_MIN = 1.5   # Minimum spawn interval (cap)
+SPAWN_INTERVAL_DECAY = .1  # Rate at which spawn interval decreases
 
+spawn_interval = 2  # Spawn a new asteroid every 2 seconds
 last_spawn_time = time.time()  # Track when the last asteroid was spawned
 last_powerup_time = time.time()  # Track when the last power-up was spawned
-powerup_spawn_interval = 10  # Power-ups spawn every 10 seconds
-spawn_interval = 2  # Spawn a new asteroid every 2 seconds
+powerup_spawn_interval = 5  # Power-ups spawn every 10 seconds
+
 delay_start_time = None  # Variable to track when the game actually starts
 game_start_time = None
 final_survival_time = None
@@ -187,6 +205,10 @@ while True:
 
     if not gl.game_over:
         current_time = time.time()
+        if game_start_time is None:
+            game_start_time = pygame.time.get_ticks()  # Start survival timer
+
+        spawn_interval = get_dynamic_spawn_interval()  # Update spawn interval based on time
 
         # Initialize delay_start_time when the player first starts the game
         if delay_start_time is None:
@@ -195,14 +217,10 @@ while True:
 
         # Wait for 3 seconds before spawning asteroids
         if current_time - delay_start_time >= 3:  # Wait for 3 seconds after game starts
-            if game_start_time is None:
-                game_start_time = pygame.time.get_ticks()  # Start survival timer once delay ends
-
-            spawn_interval = 5  # Spawn a new asteroid every 5 seconds
-            
             if current_time - last_spawn_time >= spawn_interval:
-                spawn_asteroids(1)  # Spawn a new asteroid
-                last_spawn_time = current_time  # Update the last spawn time
+                    spawn_asteroids(1)  # Spawn a new asteroid
+                    last_spawn_time = current_time  # Update last spawn time
+
             
             # Power-up spawning logic
             if current_time - last_powerup_time >= powerup_spawn_interval:
@@ -226,6 +244,7 @@ while True:
             if current_time_ms > best_time_ms:
                 gl.best_survival_time = final_survival_time
     else:
+        
         button_rect = draw_game_over(screen)
         if final_survival_time:
             # Show final survival time

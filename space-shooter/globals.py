@@ -1,4 +1,5 @@
 from vector import Vector
+import pygame
 
 # Game window
 screen_width = 1280
@@ -12,6 +13,19 @@ game_over = False
 # Frame rate
 FPS = 60
 
+#Iinitialize mixer for sound
+pygame.mixer.init()
+# Load sound effects and music
+shooting_sound = pygame.mixer.Sound('space-shooter/sounds/trimmed_output.mp3')  # Path to your sound file
+explosion_sound = pygame.mixer.Sound('space-shooter/sounds/Explosion.mp3')  # Example for explosion sound (if you have one)
+pygame.mixer.music.load('space-shooter/sounds/background_sd.wav')
+# Set default volume for all sounds
+shooting_sound.set_volume(0.06)  # Set shooting sound to 50% volume
+explosion_sound.set_volume(0.5)  # Set explosion sound to 70% volume
+# Set background music volume
+pygame.mixer.music.set_volume(0.2)  # Set background music to 20% volume
+# Play the background music in a loop
+pygame.mixer.music.play(loops=-1, start=0.0)  # Loops indefinitely
 # Colors
 BLACK = (0, 0, 0)
 GRAY = (127, 127, 127)

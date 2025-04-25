@@ -16,6 +16,9 @@ dmg_cooldown = 4  # How many seconds the player is invulnerable after taking dam
 transparency = 0.7  # How much transparency to add when in damage cooldown
 MAX_BULLETS = 10
 
+# Constants for sound cooldown
+SHOOTING_SOUND_COOLDOWN = 0.2  # Seconds between sound effects (100ms)
+
 def lerp_angle(a, b, t):
     """Linearly interpolate between two angles in degrees."""
     diff = (b - a + 180) % 360 - 180
@@ -49,6 +52,8 @@ class Player(Object):
         self.shrunk = False
         self.ship_scale = 1.0
 
+        self.shooting_sound_timer = 0  # Cooldown timer for sound effect
+
 
     def register_hit(self):
         if self.shield_timer > 0:
@@ -58,6 +63,7 @@ class Player(Object):
         self.lives -= 1
         self.hits += 1
         if self.lives == 0:
+            globals.explosion_sound.play()
             globals.game_over = True
         if globals.score > globals.high_score:
             globals.high_score = globals.score
@@ -118,6 +124,9 @@ class Player(Object):
         if self.ship_scale == 1.0:
             self.hitbox.radius = 8  # Reset to normal if not shrunk
 
+        # Update shooting sound timer
+        self.shooting_sound_timer += 1 / fps
+
     def shoot(self):
         if len(globals.player_bullets) >= MAX_BULLETS:
             oldest_bullet = globals.player_bullets[0]  # Delete the oldest bullet
@@ -133,6 +142,10 @@ class Player(Object):
         globals.player_bullets.append(bullet)
         globals.spawn_obj(bullet)
         print('bullet created')
+        # Only play shooting sound if cooldown has passed
+        if self.shooting_sound_timer >= SHOOTING_SOUND_COOLDOWN:
+            globals.shooting_sound.play()
+            self.shooting_sound_timer = 0  # Reset sound timer after playing sound
 
     def draw(self, surface):
         frame = self.frames[self.current_frame]
