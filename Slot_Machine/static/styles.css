@@ -12,7 +12,7 @@ html {
     align-items: center;
     width: 100%;
     justify-content: center;
-    padding-top: 175px;
+    padding-top: 25vh;
 }
 
 /* container for the balance/current_bet/payout display */
