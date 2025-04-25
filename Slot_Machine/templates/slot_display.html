@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Machine</title>
+    <link rel="stylesheet" href="{{ url_for('slot.static', filename='styles.css') }}">
+</head>
+
+<body>
+    <audio id="backgroundAudio" src="{{ url_for('slot.static', filename='background_music.m4a') }}" preload="auto"
+        loop></audio>
+    <audio id="spinAudio" src="{{ url_for('slot.static', filename='BOOM.mp3') }}" preload="auto"></audio>
+    <div class="button-container">
+        <button id="settings">⚙</button>
+    </div>
+    <div class="volume-control">
+        <label for="volumeSlider">Music Volume</label>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5"><br>
+
+        <label for="spinVolumeSlider" style="margin-right: 63px;">SFX</label>
+        <input type="range" id="spinVolumeSlider" min="0" max="1" step="0.01" value="0.5">
+    </div>
+    <div class="slot-machine-container">
+        <img src="{{ url_for('slot.static', filename='edm.gif') }}" id="edm-gif"
+            data-gif-src="{{ url_for('slot.static', filename='edm.gif') }}"
+            data-static-frame="{{ url_for('slot.static', filename='still-shot.png') }}">
+        <!-- Slot display -->
+        <div class="slots">
+            <div class="reel" id="reel1">
+                <div class="reel-inner">
+                    <div class="slot-item">{{ "🍒" }}</div>
+                    <div class="slot-item">{{ "🔔" }}</div>
+                    <div class="slot-item">{{ "🍋" }}</div>
+                </div>
+            </div>
+            <div class="reel" id="reel2">
+                <div class="reel-inner">
+                    <div class="slot-item">{{ "🍒" }}</div>
+                    <div class="slot-item">{{ "🔔" }}</div>
+                    <div class="slot-item">{{ "🍋" }}</div>
+                </div>
+            </div>
+            <div class="reel" id="reel3">
+                <div class="reel-inner">
+                    <div class="slot-item">{{ "🍒" }}</div>
+                    <div class="slot-item">{{ "🔔" }}</div>
+                    <div class="slot-item">{{ "🍋" }}</div>
+                </div>
+            </div>
+            <div class="reel" id="reel4">
+                <div class="reel-inner">
+                    <div class="slot-item">{{ "🍒" }}</div>
+                    <div class="slot-item">{{ "🔔" }}</div>
+                    <div class="slot-item">{{ "🍋" }}</div>
+                </div>
+            </div>
+            <div class="reel" id="reel5">
+                <div class="reel-inner">
+                    <div class="slot-item">{{ "🍒" }}</div>
+                    <div class="slot-item">{{ "🔔" }}</div>
+                    <div class="slot-item">{{ "🍋" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="balance-container">
+        <p id="balanceDisplay">Credit: $1000 {{ balance }}</p>
+        <p id="payoutDisplay">Win: $0{{ payout }}</p>
+        <p id="betDisplay">Bet: $0 {{ current_bet }}</p>
+
+        {% if error_message %}
+        <p style="color:red">{{ error_message }}</p>
+        {% endif %}
+    </div>
+
+    <div class="button-container">
+        <button id="downButton">&#x25BC</button>
+        <button id="upButton">&#x25B2</button>
+        <button class="bet-button" data-bet="0.75">$0.75</button>
+        <button class="bet-button" data-bet="1.50">$1.50</button>
+        <button class="bet-button" data-bet="2.25">$2.25</button>
+        <button class="bet-button" data-bet="3.00">$3.00</button>
+        <button id="spinButton">Spin</button>
+        <button id="infoButton">?</button>
+        <button id="pause">&#x23F8;</button>
+    </div>
+
+    <div id="info" class="infoPopUp">
+        <div class="popup-content">
+            <span class="close-button">&times;</span>
+
+            <!-- Rules Pages -->
+            <div class="rules-page" id="page-1">
+                <h2>Game Info</h2>
+                <p>Players automatically begin with a balance of $1000</p>
+                <p>1. Select a bet (arrows will adjust amount)</p>
+                <p>2. Hit spin</p>
+                <p>3. See next pages for paylines</p>
+            </div>
+
+            <div class="rules-page" id="page-2" style="display: none;">
+                <h2>Winning Lines</h2>
+                <p>5 of a kind in a row</p>
+                <p>5 of a kind in a V pattern</p>
+                <p>5 of a kind in a caret pattern</p>
+                <p>3 of a kind in a row</p>
+                <p>3 or more dice pay flat $100</p>
+            </div>
+
+            <div class="rules-page" id="page-3" style="display: none;">
+                <h2>Payouts for 3 in a row</h2>
+                <p>
+                    🍒 x 2<br>
+                    🍋 x 3<br>
+                    🍉 x 4<br>
+                    🍊 x 5<br>
+                    🍓 x 6<br>
+                    🔔 x 10<br>
+                    💎 x 30<br>
+                    🌟 x 100
+                </p>
+            </div>
+
+            <div class="rules-page" id="page-4" style="display: none;">
+                <h2>Payouts for 5 in a row</h2>
+                <p>
+                    🍒 x 5<br>
+                    🍋 x 8<br>
+                    🍉 x 12<br>
+                    🍊 x 15<br>
+                    🍓 x 18<br>
+                    🔔 x 30<br>
+                    💎 x 100<br>
+                    🌟 x 500
+                </p>
+            </div>
+
+            <div class="rules-page" id="page-5" style="display: none;">
+                <p>
+                    <img src="{{ url_for('slot.static', filename='one_more_spin.jpg') }}" height=50% width=50% />
+                </p>
+            </div>
+
+            <!-- Navigation Arrows -->
+            <div class="navigation-buttons">
+                <button id="prevPage">&#8592;</button>
+                <button id="nextPage">&#8594;</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('slot.static', filename='script.js') }}"></script>
+</body>
+
+</html>
