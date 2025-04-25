@@ -3,6 +3,7 @@ from blackjack.app import blackjack_bp  #Blackjack Blueprint
 from flask_socketio import SocketIO
 from blackjack.app import TitleNamespace, ScreenNamespace
 from zmaze.routes.maze_routes import maze_bp  # Import Zmaze Blueprint
+from Slot_Machine.app import slot_bp
 import os  # For debugging
 
 
@@ -18,6 +19,7 @@ socketio = SocketIO(app)
 
 app.register_blueprint(blackjack_bp, url_prefix='/blackjack') # Register the Blackjack Blueprint
 app.register_blueprint(maze_bp, url_prefix='/zmaze') # Register the Zmaze Blueprint
+app.register_blueprint(slot_bp, url_prefix='/slotmachine')
 
 socketio.on_namespace(TitleNamespace('/title')) # added
 socketio.on_namespace(ScreenNamespace('/game_screen')) #added
@@ -33,7 +35,6 @@ def brick_breaker():
 @app.route('/zmaze')
 def zmaze():
     return redirect(url_for('maze.maze_page'))  # Redirect to the Zmaze blueprint route
-
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
