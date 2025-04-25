@@ -13,7 +13,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     width: 100%;
     background-color: white;
     border-radius: 8px;
@@ -34,7 +34,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    max-width: 500px;
+    max-width: 800px;
     margin-bottom: 20px;
     font-size: 18px;
     font-weight: bold;
@@ -49,14 +49,14 @@ h1 {
 
 #maze {
     display: grid;
-    grid-template-columns: repeat(21, 20px);
-    grid-template-rows: repeat(21, 20px);
+    grid-template-columns: repeat(21, 30px);
+    grid-template-rows: repeat(21, 30px);
     gap: 0;
 }
 
 .cell {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     border: 1px solid #ddd;
 }
 
