@@ -141,12 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const spinAudio = document.getElementById("spinAudio");
     spinAudio.volume = spinVolumeSlider.value;
-    spinAudio.currentTime = 4.90;
     spinAudio.play();
-
-    setTimeout(() => {
-      spinAudio.pause();
-    }, 7000);
 
     subtractBet(balance - currentBet);
     spinButton.disabled = true;
