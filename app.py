@@ -32,6 +32,10 @@ def home():
 def brick_breaker():
     return render_template('brick_breaker.html')  # Brick Breaker page
 
+@app.route('/flappy-bird')
+def flappy_bird():
+    return render_template('flappy_bird.html')
+
 @app.route('/zmaze')
 def zmaze():
     return redirect(url_for('maze.maze_page'))  # Redirect to the Zmaze blueprint route
