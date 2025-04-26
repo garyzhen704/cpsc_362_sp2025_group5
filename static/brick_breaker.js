@@ -193,7 +193,7 @@ function collisionDetection() {
                             if (allBricksCleared) {
                                 setTimeout(() => {
                                     alert("YOU WIN, CONGRATULATIONS!");
-                                    document.location.reload();
+                                    resetBricks(); // Reset bricks for the next level
                                 }, 100);
                             }
                         }
@@ -202,6 +202,20 @@ function collisionDetection() {
             }
         }
     }
+}
+
+// Function to reset bricks
+function resetBricks() {
+    bricks = [];
+    for (let c = 0; c < brickColumnCount; c++) {
+        bricks[c] = [];
+        for (let r = 0; r < brickRowCount; r++) {
+            bricks[c][r] = { x: 0, y: 0, status: 1 }; // Reset all bricks to active
+        }
+    }
+    gameStarted = false; // Pause the game until the player clicks
+    balls = [{ x: canvas.width / 2, y: canvas.height - 30, dx: 0, dy: 0 }]; // Reset ball position
+    paddleX = (canvas.width - paddleWidth) / 2; // Reset paddle position
 }
 
 function spawnPowerUp(x, y) { 
@@ -224,7 +238,7 @@ function collectPowerUps() {
                 balls.push({ x: balls[0].x, y: balls[0].y, dx: 4, dy: -4 });
                 score += 5;
             } else if (power.type === "paddleWidth") {
-                paddleWidth += 20;
+                paddleWidth += 30;
                 score += 5;
                 setTimeout(() => {
                     paddleWidth -= 20;
@@ -239,6 +253,10 @@ function collectPowerUps() {
     });
 }
 
+
+// Add a gameStarted flag
+let gameStarted = false;
+
 // Main Game Loop
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -251,48 +269,56 @@ function draw() {
     drawPowerUps();
     collectPowerUps();
 
-    balls.forEach((ball, ballIndex) => {
-        ball.x += ball.dx;
-        ball.y += ball.dy;
+    if (!gameStarted) {
+        // Position the ball on the paddle
+        balls[0].x = paddleX + paddleWidth / 2;
+        balls[0].y = canvas.height - paddleHeight - ballRadius;
+    } else {
+        balls.forEach((ball, ballIndex) => {
+            ball.x += ball.dx;
+            ball.y += ball.dy;
 
-        if (ball.x + ball.dx > canvas.width - ballRadius || ball.x + ball.dx < ballRadius) {
-            ball.dx = -ball.dx;
-        }
+            if (ball.x + ball.dx > canvas.width - ballRadius || ball.x + ball.dx < ballRadius) {
+                ball.dx = -ball.dx;
+            }
 
-        if (ball.y + ball.dy < ballRadius) {
-            ball.dy = -ball.dy;
-        } else if (ball.y + ball.dy > canvas.height - ballRadius) {
-            if (
-                ball.x > paddleX &&
-                ball.x < paddleX + paddleWidth &&
-                ball.y + ballRadius >= canvas.height - paddleHeight
-            ) {
-                let hitPosition = ball.x - (paddleX + paddleWidth / 2);
-                let hitAngle = (hitPosition / (paddleWidth / 2)) * (Math.PI / 3);
+            if (ball.y + ball.dy < ballRadius) {
+                ball.dy = -ball.dy;
+            } else if (ball.y + ball.dy > canvas.height - ballRadius) {
+                if (
+                    ball.x > paddleX &&
+                    ball.x < paddleX + paddleWidth &&
+                    ball.y + ballRadius >= canvas.height - paddleHeight
+                ) {
+                    let hitPosition = ball.x - (paddleX + paddleWidth / 2);
+                    let hitAngle = (hitPosition / (paddleWidth / 2)) * (Math.PI / 3);
 
-                ball.dx = 4 * Math.sin(hitAngle);
-                ball.dy = -Math.abs(4 * Math.cos(hitAngle));
+                    ball.dx = 4 * Math.sin(hitAngle);
+                    ball.dy = -Math.abs(4 * Math.cos(hitAngle));
 
-                const speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
-                if (speed > maxBallSpeed) {
-                    ball.dx = (ball.dx / speed) * maxBallSpeed;
-                    ball.dy = (ball.dy / speed) * maxBallSpeed;
-                }
-            } else {
-                balls.splice(ballIndex, 1);
-                if (balls.length === 0) {
-                    lives--;
-                    if (lives === 0) {
-                        alert("GAME OVER");
-                        document.location.reload();
-                    } else {
-                        balls = [{ x: canvas.width / 2, y: canvas.height - 30, dx: 4, dy: -4 }];
+                    const speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+                    if (speed > maxBallSpeed) {
+                        ball.dx = (ball.dx / speed) * maxBallSpeed;
+                        ball.dy = (ball.dy / speed) * maxBallSpeed;
                     }
-                    paddleX = (canvas.width - paddleWidth) / 2;
+                } else {
+                    balls.splice(ballIndex, 1);
+                    if (balls.length === 0) {
+                        lives--;
+                        if (lives === 0) {
+                            alert("GAME OVER");
+                            document.location.reload();
+                        } else {
+                            // Reset ball and paddle position
+                            balls = [{ x: canvas.width / 2, y: canvas.height - 30, dx: 0, dy: 0 }];
+                            paddleX = (canvas.width - paddleWidth) / 2;
+                            gameStarted = false; // Wait for player to click
+                        }
+                    }
                 }
             }
-        }
-    });
+        });
+    }
 
     if (rightPressed && paddleX < canvas.width - paddleWidth) {
         paddleX += paddleSpeed;
@@ -302,5 +328,14 @@ function draw() {
 
     requestAnimationFrame(draw);
 }
+
+// Add an event listener to start the game on click
+canvas.addEventListener("click", () => {
+    if (!gameStarted) {
+        gameStarted = true;
+        balls[0].dx = (Math.random() < 0.5 ? -1 : 1) * 4; // Randomize initial horizontal direction
+        balls[0].dy = -4; // Keep the ball moving upward
+    }
+});
 
 draw();
