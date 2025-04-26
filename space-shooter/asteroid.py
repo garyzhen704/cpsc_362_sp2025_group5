@@ -1,6 +1,7 @@
 import pygame
 import random
 import globals
+import sounds
 from object import Object
 from vector import Vector
 
@@ -76,6 +77,8 @@ class Asteroid(Object):
             self._spawn_piece(remaining_size, angle2)
         globals.score += 10
         globals.delete_obj(self)
+
+        random.choice(sounds.asteroid_exp_sounds).play()
 
     def _spawn_piece(self, size, angle):
         vel_add = self.velocity.normalized() * random.uniform(-PIECE_SPD_OFFSET, PIECE_SPD_OFFSET)

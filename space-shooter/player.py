@@ -5,6 +5,7 @@ from object import Object
 from vector import Vector
 from bullet import Bullet  # Import the Bullet class
 import globals
+import sounds
 from asteroid import Asteroid
 
 MAX_SPEED = 360  # Pixels per second
@@ -77,7 +78,7 @@ class Player(Object):
         self.lives -= 1
         self.hits += 1
         if self.lives == 0:
-            globals.explosion_sound.play()
+            sounds.death_sound.play()
             globals.game_over = True
         if globals.score > globals.high_score:
             globals.high_score = globals.score
@@ -156,7 +157,7 @@ class Player(Object):
         bullet = Bullet(self.position + offset, direction, self.velocity, pygame.Color('orange'))
         globals.player_bullets.append(bullet)
         globals.spawn_obj(bullet)
-        globals.shooting_sound.play()
+        sounds.shooting_sound.play()
         print('bullet created')
 
 
