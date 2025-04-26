@@ -4,10 +4,10 @@ import random
 from object import Object
 from vector import Vector
 import globals
-import player
 
 POWERUP_RADIUS = 15
 POWERUP_DURATION = 5  # seconds for temporary effects
+MIN_FIRE_RATE = 0.03  # Lowest fire rate possible
 
 class PowerUp(Object):
     TYPES = ['life', 'fast_bullets', 'shield', 'shrink']
@@ -65,20 +65,17 @@ class PowerUp(Object):
         rect = current_frame.get_rect(center=(self.position.x, self.position.y))
         surface.blit(current_frame, rect)
 
-    def activate(self, playerr):
+    def activate(self, player):
         if self.type == 'life':
-            playerr.lives += 1
+            player.lives += 1
 
         elif self.type == 'fast_bullets':
-            #Increase bullet speed permanently, with a cap
-              # Example increment value
-              if player.fire_rate > 0.02:
-                player.fire_rate -= 0.01
-
+            # Increase bullet speed permanently, with a cap
+            globals.player.fire_rate = max(globals.player.fire_rate - 0.01, MIN_FIRE_RATE)
 
         elif self.type == 'shield':
-            playerr.shield_timer = POWERUP_DURATION
+            player.shield_timer = POWERUP_DURATION
 
         elif self.type == 'shrink':
-            playerr.shrink_timer = POWERUP_DURATION
-            playerr.hitbox.radius = max(3, playerr.hitbox.radius * 0.5)
+            player.shrink_timer = POWERUP_DURATION
+            player.hitbox.radius = max(3, player.hitbox.radius * 0.5)

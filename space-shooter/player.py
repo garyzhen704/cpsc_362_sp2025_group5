@@ -8,21 +8,37 @@ import globals
 from asteroid import Asteroid
 
 
-max_speed = 360  # Pixels per second
-acceleration = 15  # Pixels per second squared
-deceleration = 0.5  # Deceleration rate
-fire_rate = 0.07  # In seconds
-dmg_cooldown = 4  # How many seconds the player is invulnerable after taking damage
-transparency = 0.7  # How much transparency to add when in damage cooldown
-MAX_BULLETS = 10
+MAX_SPEED = 360  # Pixels per second
+ACCELERATION = 15  # Pixels per second squared
+DECELERATION = 0.5  # Deceleration rate
 
-# Constants for sound cooldown
-SHOOTING_SOUND_COOLDOWN = 0.2  # Seconds between sound effects (100ms)
+BASE_FIRE_RATE = 0.17  # In seconds
+MAX_BULLETS = 20
+
+DMG_COOLDOWN = 4  # How many seconds the player is invulnerable after taking damage
+TRANSPARENCY = 0.7  # How much transparency to add when in damage cooldown
 
 def lerp_angle(a, b, t):
     """Linearly interpolate between two angles in degrees."""
     diff = (b - a + 180) % 360 - 180
     return a + diff * t
+
+
+def get_input_dir() -> Vector:
+    dir = Vector(0, 0)
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        dir.x -= 1.0
+    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        dir.x += 1.0
+    if keys[pygame.K_UP] or keys[pygame.K_w]:
+        dir.y -= 1.0
+    if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+        dir.y += 1.0
+
+    return dir.normalized()
+
 
 class Player(Object):
     def __init__(self, pos: Vector, color):
@@ -39,8 +55,9 @@ class Player(Object):
         self.target_angle = 0  # Where the ship wants to point
 
         self.shoot_timer = 0  # How much time has passed since the last shot
-        self.hit_timer = dmg_cooldown  # How much time has passed since taking damage
+        self.fire_rate = BASE_FIRE_RATE
 
+        self.hit_timer = DMG_COOLDOWN  # How much time has passed since taking damage
         self.hits = 0  # Add a counter for hits
         self.max_hits = 2  # Maximum number of hits before the game ends
         self.game_over = False  # Flag to indicate the game is over
@@ -51,8 +68,6 @@ class Player(Object):
 
         self.shrunk = False
         self.ship_scale = 1.0
-
-        self.shooting_sound_timer = 0  # Cooldown timer for sound effect
 
 
     def register_hit(self):
@@ -68,21 +83,23 @@ class Player(Object):
         if globals.score > globals.high_score:
             globals.high_score = globals.score
 
+
     def load_frames(self, folder_path):
         frame_files = sorted([f for f in os.listdir(folder_path) if f.endswith('.png')])
         return [pygame.image.load(os.path.join(folder_path, f)).convert_alpha() for f in frame_files]
+
 
     def update(self, fps: float):
         input_dir = get_input_dir()
         throttle_on = input_dir.magnitude() > 0.1
 
         # Apply movement
-        target_vel = input_dir * max_speed
-        self.velocity = self.velocity.moved_toward(target_vel, acceleration if throttle_on else deceleration)
+        target_vel = input_dir * MAX_SPEED
+        self.velocity = self.velocity.moved_toward(target_vel, ACCELERATION if throttle_on else DECELERATION)
         self.apply_velocity(fps)
 
         self.hit_timer += 1 / fps
-        if self.hit_timer > dmg_cooldown:
+        if self.hit_timer > DMG_COOLDOWN:
             for obj in globals.game_objects.copy():
                 if isinstance(obj, Asteroid):
                     if self.hitbox.radius + obj.hitbox.radius > self.position.distance_to(obj.position):
@@ -102,13 +119,14 @@ class Player(Object):
             self.current_frame = (self.current_frame + 1) % len(self.frames)
             self.animation_timer = 0
 
-        self.shoot_timer += 1 / fps
+        if self.shoot_timer < self.fire_rate:
+            self.shoot_timer += 1 / fps
         # Shoot when spacebar is pressed and timer has reached target time
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE] and self.shoot_timer > fire_rate:
+        if keys[pygame.K_SPACE] and self.shoot_timer > self.fire_rate:
             print('spacebar pressed')
             self.shoot()
-            self.shoot_timer = 0
+            self.shoot_timer -= self.fire_rate
 
         if self.shield_timer > 0:
             self.shield_timer -= 1 /fps
@@ -124,8 +142,6 @@ class Player(Object):
         if self.ship_scale == 1.0:
             self.hitbox.radius = 8  # Reset to normal if not shrunk
 
-        # Update shooting sound timer
-        self.shooting_sound_timer += 1 / fps
 
     def shoot(self):
         if len(globals.player_bullets) >= MAX_BULLETS:
@@ -141,11 +157,9 @@ class Player(Object):
         bullet = Bullet(self.position + offset, direction, self.velocity, pygame.Color('orange'))
         globals.player_bullets.append(bullet)
         globals.spawn_obj(bullet)
+        globals.shooting_sound.play()
         print('bullet created')
-        # Only play shooting sound if cooldown has passed
-        if self.shooting_sound_timer >= SHOOTING_SOUND_COOLDOWN:
-            globals.shooting_sound.play()
-            self.shooting_sound_timer = 0  # Reset sound timer after playing sound
+
 
     def draw(self, surface):
         frame = self.frames[self.current_frame]
@@ -161,8 +175,8 @@ class Player(Object):
         rotated_frame = pygame.transform.rotate(frame, self.angle)
 
         # Add transparency while in damage cooldown
-        if self.hit_timer < dmg_cooldown:
-            rotated_frame.set_alpha(int(255 * transparency))
+        if self.hit_timer < DMG_COOLDOWN:
+            rotated_frame.set_alpha(int(255 * TRANSPARENCY))
 
         # Center the rotated image
         rect = rotated_frame.get_rect(center=(self.position.x, self.position.y))
@@ -174,18 +188,3 @@ class Player(Object):
             shield_scaled = pygame.transform.scale(self.shield_image, (shield_size, shield_size))
             shield_rect = shield_scaled.get_rect(center=(self.position.x, self.position.y))
             surface.blit(shield_scaled, shield_rect)
-
-def get_input_dir() -> Vector:
-    dir = Vector(0, 0)
-
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        dir.x -= 1.0
-    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        dir.x += 1.0
-    if keys[pygame.K_UP] or keys[pygame.K_w]:
-        dir.y -= 1.0
-    if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        dir.y += 1.0
-
-    return dir.normalized()

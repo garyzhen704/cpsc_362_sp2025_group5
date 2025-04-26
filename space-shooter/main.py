@@ -16,7 +16,6 @@ button_font = pygame.font.Font(None, 48)
 font = pygame.font.Font(None, 24) 
 
 
-
 def draw_game_over(surface):
     # Dark overlay
     overlay = pygame.Surface((gl.screen_width, gl.screen_height))
@@ -36,6 +35,7 @@ def draw_game_over(surface):
     surface.blit(button_text, button_rect)
 
     return button_rect
+
 
 def spawn_asteroids(count=5):
     for _ in range(count):
@@ -67,6 +67,8 @@ def spawn_asteroids(count=5):
         # Create the asteroid and add it to the game
         asteroid = Asteroid(size, pos, velocity)
         gl.spawn_obj(asteroid)
+
+
 def spawn_powerup():
     # Randomly choose a type of power-up
     powerup_type = random.choice(PowerUp.TYPES)
@@ -79,9 +81,11 @@ def spawn_powerup():
     powerup = PowerUp(pos, powerup_type)
     gl.spawn_obj(powerup)
 
+
 def wrap(num, min, max):
     range_size = max - min + 1
     return (num - min) % range_size + min
+
 
 def clamp_to_screen(obj: Object):
     if isinstance(obj.hitbox, pygame.Rect):
@@ -94,6 +98,7 @@ def clamp_to_screen(obj: Object):
     
     obj.position = Vector(x, y)
 
+
 def get_survival_time():
     if game_start_time:  # Only calculate if the start time is set
         elapsed_time_ms = pygame.time.get_ticks() - game_start_time  # Time in milliseconds
@@ -104,6 +109,7 @@ def get_survival_time():
         # Return formatted time string
         return f"{minutes:02}:{seconds:02}:{milliseconds:03}"
     return "00:00:000"  # Default return when no start time is set
+
 
 def get_dynamic_spawn_interval():
     """Calculate the dynamic spawn interval based on the time survived."""
@@ -148,7 +154,6 @@ powerup_spawn_interval = 5  # Power-ups spawn every 10 seconds
 delay_start_time = None  # Variable to track when the game actually starts
 game_start_time = None
 final_survival_time = None
-
 
 
 # Game loop
