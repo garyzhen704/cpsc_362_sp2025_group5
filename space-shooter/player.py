@@ -7,7 +7,6 @@ from bullet import Bullet  # Import the Bullet class
 import globals
 from asteroid import Asteroid
 
-
 MAX_SPEED = 360  # Pixels per second
 ACCELERATION = 15  # Pixels per second squared
 DECELERATION = 0.5  # Deceleration rate
@@ -41,10 +40,10 @@ def get_input_dir() -> Vector:
 
 
 class Player(Object):
-    def __init__(self, pos: Vector, color):
+    def __init__(self, pos: Vector):
         hitbox_radius = 8
 
-        super().__init__(hitbox_radius, pos, Vector(0, 0), color)
+        super().__init__(hitbox_radius, pos, Vector(0, 0), globals.WHITE)
 
         self.frames = self.load_frames("space-shooter/frames")
         self.current_frame = 0
@@ -102,7 +101,7 @@ class Player(Object):
         if self.hit_timer > DMG_COOLDOWN:
             for obj in globals.game_objects.copy():
                 if isinstance(obj, Asteroid):
-                    if self.hitbox.radius + obj.hitbox.radius > self.position.distance_to(obj.position):
+                    if self.hitbox.is_colliding(obj):
                         self.register_hit()
                         obj.destroy()
 

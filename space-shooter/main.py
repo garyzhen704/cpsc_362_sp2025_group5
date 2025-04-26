@@ -8,12 +8,8 @@ from player import Player
 from asteroid import Asteroid
 import random
 import time
+import powerup
 from powerup import PowerUp
-
-# Font setup
-pygame.init()
-button_font = pygame.font.Font(None, 48)
-font = pygame.font.Font(None, 24) 
 
 
 def draw_game_over(surface):
@@ -38,7 +34,14 @@ def draw_game_over(surface):
 
 
 def spawn_asteroids(count=5):
-    for _ in range(count):
+    spawns_left = max(max_asteroids - len(gl.asteroids), 0)
+    final_count = min(count, spawns_left)
+
+    if final_count != count:
+        print(f"max asteroids reached ({len(gl.asteroids)}/{max_asteroids})")
+        print(f"spawned {final_count} asteroids instead of {count}")
+
+    for _ in range(final_count):
         # Randomly choose a side to spawn the asteroid (top, bottom, left, or right)
         side = random.choice(['top', 'bottom', 'left', 'right'])
         
@@ -62,7 +65,7 @@ def spawn_asteroids(count=5):
             pos += Vector(random.randint(50, 100), random.randint(50, 100))
         
         # Randomly generate the asteroid size
-        size = random.randint(20, 30)
+        size = random.randint(1, 5)
         
         # Create the asteroid and add it to the game
         asteroid = Asteroid(size, pos, velocity)
@@ -71,15 +74,20 @@ def spawn_asteroids(count=5):
 
 def spawn_powerup():
     # Randomly choose a type of power-up
-    powerup_type = random.choice(PowerUp.TYPES)
+    types = PowerUp.TYPES.copy()
+    # Do not choose fast_bullets if already at max upgrade
+    if gl.player.fire_rate <= powerup.MIN_FIRE_RATE:
+        types.remove("fast_bullets")
+
+    powerup_type = random.choice(types)
 
     # Randomly spawn position on the screen
     spawn_x = random.randint(0, gl.screen_width)
     spawn_y = random.randint(0, gl.screen_height)
     pos = Vector(spawn_x, spawn_y)
 
-    powerup = PowerUp(pos, powerup_type)
-    gl.spawn_obj(powerup)
+    new_powerup = PowerUp(pos, powerup_type)
+    gl.spawn_obj(new_powerup)
 
 
 def wrap(num, min, max):
@@ -88,13 +96,9 @@ def wrap(num, min, max):
 
 
 def clamp_to_screen(obj: Object):
-    if isinstance(obj.hitbox, pygame.Rect):
-        x = wrap(obj.position.x, 0, gl.screen_width)
-        y = wrap(obj.position.y, 0, gl.screen_height)
-    else:
-        radius = obj.hitbox.radius
-        x = wrap(obj.position.x, -radius, gl.screen_width + radius)
-        y = wrap(obj.position.y, -radius, gl.screen_height + radius)
+    radius = obj.hitbox.radius
+    x = wrap(obj.position.x, -radius, gl.screen_width + radius)
+    y = wrap(obj.position.y, -radius, gl.screen_height + radius)
     
     obj.position = Vector(x, y)
 
@@ -124,6 +128,11 @@ def get_dynamic_spawn_interval():
     return new_interval
 
 
+# Font setup
+pygame.init()
+button_font = pygame.font.Font(None, 48)
+font = pygame.font.Font(None, 24) 
+
 # Initialize pygame display
 info = pygame.display.Info()
 WINDOWED_SIZE = (gl.screen_width, gl.screen_height)
@@ -137,24 +146,26 @@ background = pygame.image.load("space-shooter/space_bg.jpg").convert()
 background = pygame.transform.scale(background, (gl.screen_width, gl.screen_height))
 
 # Create player and asteroids
-player = Player(gl.player_start_pos, gl.WHITE)
-gl.player = player
-gl.spawn_obj(player)
+gl.player = Player(gl.player_start_pos)
+gl.spawn_obj(gl.player)
 
 # Constants for spawn rate control
-SPAWN_INTERVAL_START = 8  # Start at 8 seconds
+SPAWN_INTERVAL_START = 7  # Start at 8 seconds
 SPAWN_INTERVAL_MIN = 1.5   # Minimum spawn interval (cap)
-SPAWN_INTERVAL_DECAY = .1  # Rate at which spawn interval decreases
+SPAWN_INTERVAL_DECAY = .05  # Rate at which spawn interval decreases
 
+max_asteroids = 20
 spawn_interval = 2  # Spawn a new asteroid every 2 seconds
 last_spawn_time = time.time()  # Track when the last asteroid was spawned
+
 last_powerup_time = time.time()  # Track when the last power-up was spawned
-powerup_spawn_interval = 5  # Power-ups spawn every 10 seconds
+powerup_spawn_interval = 10  # Power-ups spawn every 10 seconds
 
 delay_start_time = None  # Variable to track when the game actually starts
 game_start_time = None
 final_survival_time = None
 
+show_debug_hitboxes = False
 
 # Game loop
 while True:
@@ -174,18 +185,15 @@ while True:
                     # Reset game
                     gl.game_over = False
                     gl.score = 0
-                    gl.game_objects.clear()
+                    for obj in gl.game_objects.copy():
+                        gl.delete_obj(obj)
 
-                    
                     game_start_time = pygame.time.get_ticks()  # Set the start time again if it's None
                     final_survival_time = None #Resetting final time that shows up in end screen
 
-                    new_player = Player(gl.player_start_pos, gl.player_color)
-                    gl.player = new_player  # Make sure to update the global reference
-                    gl.spawn_obj(new_player)
+                    gl.player = Player(gl.player_start_pos)
+                    gl.spawn_obj(gl.player)
 
-                    spawn_asteroids(1)
-                    
                     continue
 
         if event.type == KEYDOWN:
@@ -196,10 +204,10 @@ while True:
             elif event.key == pygame.K_m:
                 pygame.display.iconify()
 
-            elif event.key == pygame.K_z:
-                for obj in list(gl.game_objects):
-                    if isinstance(obj, Asteroid):
-                        obj.destroy()
+            # elif event.key == pygame.K_z:
+            #     for obj in list(gl.game_objects):
+            #         if isinstance(obj, Asteroid):
+            #             obj.destroy()
 
     # Scale and draw background
     screen_width = gl.screen_width
@@ -218,13 +226,12 @@ while True:
         # Initialize delay_start_time when the player first starts the game
         if delay_start_time is None:
             delay_start_time = current_time
-            
 
         # Wait for 3 seconds before spawning asteroids
         if current_time - delay_start_time >= 3:  # Wait for 3 seconds after game starts
             if current_time - last_spawn_time >= spawn_interval:
-                    spawn_asteroids(1)  # Spawn a new asteroid
-                    last_spawn_time = current_time  # Update last spawn time
+                spawn_asteroids(1)  # Spawn a new asteroid
+                last_spawn_time = current_time  # Update last spawn time
 
             
             # Power-up spawning logic
@@ -237,6 +244,9 @@ while True:
             obj.update(gl.FPS)
             clamp_to_screen(obj)
             obj.draw(screen)
+            if show_debug_hitboxes:
+                obj.debug_draw(screen)
+
         # Check if the game has just ended
         if gl.game_over and final_survival_time is None:
             final_survival_time = get_survival_time()
@@ -248,12 +258,11 @@ while True:
     
             if current_time_ms > best_time_ms:
                 gl.best_survival_time = final_survival_time
+
     else:
-        
         button_rect = draw_game_over(screen)
         if final_survival_time:
             # Show final survival time
-            
             time_text = font.render(f"Survived: {final_survival_time} seconds", True, (200, 200, 255))
             time_rect = time_text.get_rect(center=(gl.screen_width // 2, gl.screen_height // 2 + 80))
             screen.blit(time_text, time_rect)

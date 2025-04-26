@@ -5,9 +5,10 @@ from object import Object
 from vector import Vector
 import globals
 
-POWERUP_RADIUS = 15
-POWERUP_DURATION = 5  # seconds for temporary effects
-MIN_FIRE_RATE = 0.03  # Lowest fire rate possible
+POWERUP_VIS_RADIUS = 15
+POWERUP_HITBOX_RADIUS = 25
+POWERUP_DURATION = 15  # seconds for temporary effects
+MIN_FIRE_RATE = 0.07  # Lowest fire rate possible
 
 class PowerUp(Object):
     TYPES = ['life', 'fast_bullets', 'shield', 'shrink']
@@ -19,7 +20,7 @@ class PowerUp(Object):
     }
 
     def __init__(self, pos: Vector, powerup_type: str):
-        super().__init__(POWERUP_RADIUS, pos, Vector(0, 0), self.COLORS[powerup_type])
+        super().__init__(POWERUP_HITBOX_RADIUS, pos, Vector(0, 0), self.COLORS[powerup_type])
         self.type = powerup_type
         self.spawn_time = pygame.time.get_ticks()
 
@@ -34,7 +35,7 @@ class PowerUp(Object):
         frames = []
         for i in range(1, 7):  # Assuming there are 6 frames per power-up type
             frame = pygame.image.load(f"space-shooter/powerups/Spnning Orb/{powerup_type}/frame {i}.png").convert_alpha()
-            frame = pygame.transform.scale(frame, (POWERUP_RADIUS * 2, POWERUP_RADIUS * 2))
+            frame = pygame.transform.scale(frame, (POWERUP_VIS_RADIUS * 2, POWERUP_VIS_RADIUS * 2))
         
             frames.append(frame)
         return frames
@@ -71,7 +72,7 @@ class PowerUp(Object):
 
         elif self.type == 'fast_bullets':
             # Increase bullet speed permanently, with a cap
-            globals.player.fire_rate = max(globals.player.fire_rate - 0.01, MIN_FIRE_RATE)
+            globals.player.fire_rate = max(globals.player.fire_rate - 0.015, MIN_FIRE_RATE)
 
         elif self.type == 'shield':
             player.shield_timer = POWERUP_DURATION

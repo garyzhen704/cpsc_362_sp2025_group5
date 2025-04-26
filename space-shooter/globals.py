@@ -26,12 +26,11 @@ explosion_sound.set_volume(0.5)  # Set explosion sound to 50% volume
 pygame.mixer.music.set_volume(0.2)  # Set background music to 20% volume
 # Play the background music in a loop
 pygame.mixer.music.play(loops=-1, start=0.0)  # Loops indefinitely
+
 # Colors
 BLACK = (0, 0, 0)
 GRAY = (127, 127, 127)
 WHITE = (255, 255, 255)
-player_color = WHITE
-asteroid_color = GRAY
 
 # Player spawn
 player_start_pos = Vector(screen_width / 2, screen_height / 2)  # Start at screen center
@@ -39,6 +38,7 @@ player_start_pos = Vector(screen_width / 2, screen_height / 2)  # Start at scree
 # All game objects currently processing
 game_objects = set()
 player_bullets = []
+asteroids = set()
 
 def spawn_obj(obj):
     game_objects.add(obj)
@@ -48,5 +48,7 @@ def delete_obj(obj):
         game_objects.remove(obj)
     if obj in player_bullets:
         player_bullets.remove(obj)
+    if obj in asteroids:
+        asteroids.remove(obj)
 
 player = None
