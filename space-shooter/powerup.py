@@ -53,12 +53,9 @@ class PowerUp(Object):
             return  # Stop further updates for this power-up
 
         # Check if the power-up is picked up
-        if self.hitbox.get_collisions():
-            for obj in self.hitbox.get_collisions():
-                if obj == globals.player:
-                    self.activate(obj)
-                    globals.delete_obj(self)
-                    break
+        if self.hitbox.is_colliding(globals.player):
+            self.activate(globals.player)
+            globals.delete_obj(self)
 
     def draw(self, surface):
         # Draw the current frame of the animation
@@ -72,7 +69,7 @@ class PowerUp(Object):
 
         elif self.type == 'fast_bullets':
             # Increase bullet speed permanently, with a cap
-            globals.player.fire_rate = max(globals.player.fire_rate - 0.015, MIN_FIRE_RATE)
+            player.fire_rate = max(player.fire_rate - 0.015, MIN_FIRE_RATE)
 
         elif self.type == 'shield':
             player.shield_timer = POWERUP_DURATION
