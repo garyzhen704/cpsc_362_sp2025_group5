@@ -36,3 +36,7 @@ class MazePlayer:
         self.x = x
         self.y = y
         self.moves = 0
+
+    def set_position(self,x,y): ## added for testing whitebox
+        self.x = x
+        self.y = y
