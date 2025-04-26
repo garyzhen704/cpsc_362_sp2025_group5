@@ -1,9 +1,9 @@
-body{
+body {
     font-family: 'Courier New', Courier, monospace;
     text-align: center;
+    background-color: #1d77d0; /* dark blue */
 }
 
 #board {
-    /* background-color: skyblue; */
     background-image: url("flappybirdbg.png");
 }
