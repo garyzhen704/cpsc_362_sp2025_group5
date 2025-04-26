@@ -1,3 +1,4 @@
+// Canvas Setup
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -5,10 +6,10 @@ function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-
 window.addEventListener("resize", resizeCanvas, false);
 resizeCanvas();
 
+// Game Variables
 let ballRadius = 10;
 let balls = [{ x: canvas.width / 2, y: canvas.height - 30, dx: 4, dy: -4 }];
 const maxBallSpeed = 8;
@@ -18,6 +19,55 @@ let paddleWidth = 150;
 let paddleX = (canvas.width - paddleWidth) / 2;
 let paddleSpeed = 7;
 
+let rightPressed = false;
+let leftPressed = false;
+
+let brickRowCount = 10;
+let brickColumnCount = Math.floor((canvas.width + 10) / (75 + 10));
+let brickWidth = 75;
+let brickHeight = 20;
+let brickPadding = 10;
+let brickOffsetTop = 55;
+let brickOffsetLeft = 10;
+
+let bricks = [];
+for (let c = 0; c < brickColumnCount; c++) {
+    bricks[c] = [];
+    for (let r = 0; r < brickRowCount; r++) {
+        bricks[c][r] = { x: 0, y: 0, status: 1 };
+    }
+}
+
+let score = 0;
+let lives = 3;
+
+let powerUps = [];
+const powerUpTypes = ["paddleWidth", "extraBall", "extraLife", "tripleBall"];
+const powerUpWidth = 20;
+const powerUpHeight = 20;
+const powerUpFallSpeed = 2;
+
+// Event Handlers
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+function keyDownHandler(e) {
+    if (e.key == "Right" || e.key == "ArrowRight") {
+        rightPressed = true;
+    } else if (e.key == "Left" || e.key == "ArrowLeft") {
+        leftPressed = true;
+    }
+}
+
+function keyUpHandler(e) {
+    if (e.key == "Right" || e.key == "ArrowRight") {
+        rightPressed = false;
+    } else if (e.key == "Left" || e.key == "ArrowLeft") {
+        leftPressed = false;
+    }
+}
+
+// Utility Functions
 function drawRounded(x, y, width, height, radius) {
     ctx.beginPath();
     ctx.moveTo(x + radius, y);
@@ -32,8 +82,8 @@ function drawRounded(x, y, width, height, radius) {
     ctx.closePath();
 }
 
+// Drawing Functions
 function drawPaddle() {
-    // Create a gradient for the paddle
     let gradient = ctx.createLinearGradient(
         paddleX,
         canvas.height - paddleHeight,
@@ -42,7 +92,6 @@ function drawPaddle() {
     );
     gradient.addColorStop(0, "white");
 
-    // Draw the rounded paddle
     drawRounded(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight, 7);
     ctx.fillStyle = gradient;
     ctx.fill();
@@ -68,28 +117,6 @@ function drawBall(ball) {
     ctx.closePath();
 }
 
-let rightPressed = false;
-let leftPressed = false;
-
-let brickRowCount = 10;
-let brickColumnCount = Math.floor((canvas.width + 10) / (75 + 10));
-let brickWidth = 75;
-let brickHeight = 20;
-let brickPadding = 10;
-let brickOffsetTop = 55;
-let brickOffsetLeft = 10;
-
-let bricks = [];
-for (let c = 0; c < brickColumnCount; c++) {
-    bricks[c] = [];
-    for (let r = 0; r < brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 1 };
-    }
-}
-
-let score = 0;
-let lives = 3;
-
 function drawBricks() {
     for (let c = 0; c < brickColumnCount; c++) {
         for (let r = 0; r < brickRowCount; r++) {
@@ -99,7 +126,6 @@ function drawBricks() {
                 bricks[c][r].x = brickX;
                 bricks[c][r].y = brickY;
 
-                // Create a gradient for the brick
                 let gradient = ctx.createLinearGradient(brickX, brickY, brickX + brickWidth, brickY + brickHeight);
                 gradient.addColorStop(0, "blue");
                 gradient.addColorStop(1, "lightblue");
@@ -115,76 +141,6 @@ function drawBricks() {
     }
 }
 
-let powerUps = [];
-const powerUpTypes = ["paddleWidth", "extraBall", "extraLife", "tripleBall"];
-const powerUpWidth = 20;
-const powerUpHeight = 20;
-const powerUpFallSpeed = 2;
-
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-
-function keyDownHandler(e) {
-    if (e.key == "Right" || e.key == "ArrowRight") {
-        rightPressed = true;
-    }
-    else if (e.key == "Left" || e.key == "ArrowLeft") {
-        leftPressed = true;
-    }
-}
-function keyUpHandler(e) {
-    if (e.key == "Right" || e.key == "ArrowRight") {
-        rightPressed = false;
-    }
-    else if (e.key == "Left" || e.key == "ArrowLeft") {
-        leftPressed = false;
-    }
-}
-
-function collisionDetection() {
-    for (let c = 0; c < brickColumnCount; c++) {
-        for (let r = 0; r < brickRowCount; r++) {
-            let b = bricks[c][r];
-            if (b.status == 1) {
-                if (
-                    balls.some(ball => ball.x > b.x && ball.x < b.x + brickWidth && ball.y > b.y && ball.y < b.y + brickHeight)
-                ) {
-                    balls.forEach(ball => {
-                        if (ball.x + ballRadius > b.x &&
-                            ball.x - ballRadius < b.x + brickWidth &&
-                            ball.y + ballRadius > b.y &&
-                            ball.y - ballRadius < b.y + brickHeight) {
-                            ball.dy = -ball.dy;
-                            b.status = 0;
-                            score++;
-
-                            //Spawn possible power-up
-                            if(Math.random() < 0.08) {
-                                spawnPowerUp(b.x + brickWidth / 2, b.y + brickHeight);  
-                            }
-
-                            const allBricksCleared = bricks.every(column => column.every(brick => brick.status === 0));
-                            if (allBricksCleared) {
-                                setTimeout(() => {
-                                    alert("YOU WIN, CONGRATULATIONS!");
-                                    document.location.reload();
-                                }, 100);
-                            }
-                        }
-                    });
-                }
-            }
-        }
-    }
-}
-
-function spawnPowerUp(x, y) { 
-    const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
-    powerUps.push({x: x, y: y, type: type});
-    // console.log("Power-up spawned at (" + x + ", " + y + ") of type " + type);
-    // console.log(powerUps);
-}
-
 function drawPowerUps() {
     powerUps.forEach((power, index) => {
         ctx.font = "20px Arial";
@@ -194,35 +150,6 @@ function drawPowerUps() {
         power.y += powerUpFallSpeed;
 
         if (power.y > canvas.height) {
-            power.splice(index, 1);
-        }
-    });
-}
-
-function collectPowerUps() {
-    powerUps.forEach((power, index) => {
-        if(
-            power.x > paddleX &&
-            power.x < paddleX + paddleWidth &&
-            power.y > canvas.height - paddleHeight &&
-            power.y < canvas.height
-        ) {
-            if (power.type === "extraLife") {
-                lives++;
-                score+= 5;
-            } else if (power.type === "extraBall") {
-                balls.push({ x: balls[0].x, y: balls[0].y, dx: 4, dy: -4 });
-                score+= 5;
-            } else if (power.type === "paddleWidth") {
-                paddleWidth += 20;
-                score+= 5;
-                setTimeout(() => {
-                    paddleWidth -= 20; 
-                }, 5000); // Reset paddle width after 5 seconds
-            } else if (power.type === "tripleBall") {
-                balls.push({ x: balls[0].x, y: balls[0].y, dx: 4, dy: -4 });
-                balls.push({ x: balls[0].x, y: balls[0].y, dx: -4, dy: -4 });
-                score+= 5;            }
             powerUps.splice(index, 1);
         }
     });
@@ -240,6 +167,97 @@ function drawLives() {
     ctx.fillText("Lives: " + lives, canvas.width - 150, 40);
 }
 
+// Collision Detection
+function collisionDetection() {
+    for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
+            let b = bricks[c][r];
+            if (b.status == 1) {
+                if (
+                    balls.some(ball => ball.x > b.x && ball.x < b.x + brickWidth && ball.y > b.y && ball.y < b.y + brickHeight)
+                ) {
+                    balls.forEach(ball => {
+                        if (ball.x + ballRadius > b.x &&
+                            ball.x - ballRadius < b.x + brickWidth &&
+                            ball.y + ballRadius > b.y &&
+                            ball.y - ballRadius < b.y + brickHeight) {
+                            ball.dy = -ball.dy;
+                            b.status = 0;
+                            score++;
+
+                            if (Math.random() < 0.08) {
+                                spawnPowerUp(b.x + brickWidth / 2, b.y + brickHeight);
+                            }
+
+                            const allBricksCleared = bricks.every(column => column.every(brick => brick.status === 0));
+                            if (allBricksCleared) {
+                                setTimeout(() => {
+                                    alert("YOU WIN, CONGRATULATIONS!");
+                                    resetBricks(); // Reset bricks for the next level
+                                }, 100);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+}
+
+// Function to reset bricks
+function resetBricks() {
+    bricks = [];
+    for (let c = 0; c < brickColumnCount; c++) {
+        bricks[c] = [];
+        for (let r = 0; r < brickRowCount; r++) {
+            bricks[c][r] = { x: 0, y: 0, status: 1 }; // Reset all bricks to active
+        }
+    }
+    gameStarted = false; // Pause the game until the player clicks
+    balls = [{ x: canvas.width / 2, y: canvas.height - 30, dx: 0, dy: 0 }]; // Reset ball position
+    paddleX = (canvas.width - paddleWidth) / 2; // Reset paddle position
+}
+
+function spawnPowerUp(x, y) { 
+    const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+    powerUps.push({x: x, y: y, type: type});
+}
+
+function collectPowerUps() {
+    powerUps.forEach((power, index) => {
+        if (
+            power.x > paddleX &&
+            power.x < paddleX + paddleWidth &&
+            power.y > canvas.height - paddleHeight &&
+            power.y < canvas.height
+        ) {
+            if (power.type === "extraLife") {
+                lives++;
+                score += 5;
+            } else if (power.type === "extraBall") {
+                balls.push({ x: balls[0].x, y: balls[0].y, dx: 4, dy: -4 });
+                score += 5;
+            } else if (power.type === "paddleWidth") {
+                paddleWidth += 30;
+                score += 5;
+                setTimeout(() => {
+                    paddleWidth -= 20;
+                }, 5000);
+            } else if (power.type === "tripleBall") {
+                balls.push({ x: balls[0].x, y: balls[0].y, dx: 4, dy: -4 });
+                balls.push({ x: balls[0].x, y: balls[0].y, dx: -4, dy: -4 });
+                score += 5;
+            }
+            powerUps.splice(index, 1);
+        }
+    });
+}
+
+
+// Add a gameStarted flag
+let gameStarted = false;
+
+// Main Game Loop
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     balls.forEach(drawBall);
@@ -251,52 +269,56 @@ function draw() {
     drawPowerUps();
     collectPowerUps();
 
-    balls.forEach((ball, ballIndex) => {
-        ball.x += ball.dx;
-        ball.y += ball.dy;
+    if (!gameStarted) {
+        // Position the ball on the paddle
+        balls[0].x = paddleX + paddleWidth / 2;
+        balls[0].y = canvas.height - paddleHeight - ballRadius;
+    } else {
+        balls.forEach((ball, ballIndex) => {
+            ball.x += ball.dx;
+            ball.y += ball.dy;
 
-        if (ball.x + ball.dx > canvas.width - ballRadius || ball.x + ball.dx < ballRadius) {
-            ball.dx = -ball.dx;
-        }
+            if (ball.x + ball.dx > canvas.width - ballRadius || ball.x + ball.dx < ballRadius) {
+                ball.dx = -ball.dx;
+            }
 
-        if (ball.y + ball.dy < ballRadius) {
-            ball.dy = -ball.dy;
-        } else if (ball.y + ball.dy > canvas.height - ballRadius) {
-            if (
-                ball.x > paddleX &&
-                ball.x < paddleX + paddleWidth &&
-                ball.y + ballRadius >= canvas.height - paddleHeight
-            ) {
-                // Calculate the hit position on the paddle
-                let hitPosition = ball.x - (paddleX + paddleWidth / 2);
-                let hitAngle = (hitPosition / (paddleWidth / 2)) * (Math.PI / 3); // Max angle: 60 degrees
+            if (ball.y + ball.dy < ballRadius) {
+                ball.dy = -ball.dy;
+            } else if (ball.y + ball.dy > canvas.height - ballRadius) {
+                if (
+                    ball.x > paddleX &&
+                    ball.x < paddleX + paddleWidth &&
+                    ball.y + ballRadius >= canvas.height - paddleHeight
+                ) {
+                    let hitPosition = ball.x - (paddleX + paddleWidth / 2);
+                    let hitAngle = (hitPosition / (paddleWidth / 2)) * (Math.PI / 3);
 
-                // Update ball direction based on hit angle
-                ball.dx = 4 * Math.sin(hitAngle);
-                ball.dy = -Math.abs(4 * Math.cos(hitAngle));
+                    ball.dx = 4 * Math.sin(hitAngle);
+                    ball.dy = -Math.abs(4 * Math.cos(hitAngle));
 
-                // Limit ball speed to maxBallSpeed
-                const speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
-                if (speed > maxBallSpeed) {
-                    ball.dx = (ball.dx / speed) * maxBallSpeed;
-                    ball.dy = (ball.dy / speed) * maxBallSpeed;
-                }
-            } else {
-                balls.splice(ballIndex, 1);
-                if (balls.length === 0) {
-                    lives--;
-                    if (lives === 0) {
-                        alert("GAME OVER");
-                        document.location.reload();
-                    } else {
-                        balls = [{ x: canvas.width / 2, y: canvas.height - 30, dx: 4, dy: -4 }];
-                    };
-                    paddleX = (canvas.width - paddleWidth) / 2;
+                    const speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+                    if (speed > maxBallSpeed) {
+                        ball.dx = (ball.dx / speed) * maxBallSpeed;
+                        ball.dy = (ball.dy / speed) * maxBallSpeed;
+                    }
+                } else {
+                    balls.splice(ballIndex, 1);
+                    if (balls.length === 0) {
+                        lives--;
+                        if (lives === 0) {
+                            alert("GAME OVER");
+                            document.location.reload();
+                        } else {
+                            // Reset ball and paddle position
+                            balls = [{ x: canvas.width / 2, y: canvas.height - 30, dx: 0, dy: 0 }];
+                            paddleX = (canvas.width - paddleWidth) / 2;
+                            gameStarted = false; // Wait for player to click
+                        }
+                    }
                 }
             }
-        }
-
-    });
+        });
+    }
 
     if (rightPressed && paddleX < canvas.width - paddleWidth) {
         paddleX += paddleSpeed;
@@ -304,8 +326,16 @@ function draw() {
         paddleX -= paddleSpeed;
     }
 
-
     requestAnimationFrame(draw);
 }
 
-draw()
+// Add an event listener to start the game on click
+canvas.addEventListener("click", () => {
+    if (!gameStarted) {
+        gameStarted = true;
+        balls[0].dx = (Math.random() < 0.5 ? -1 : 1) * 4; // Randomize initial horizontal direction
+        balls[0].dy = -4; // Keep the ball moving upward
+    }
+});
+
+draw();
