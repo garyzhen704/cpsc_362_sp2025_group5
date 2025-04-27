@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Brick Breaker Power-Up Tests</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .pass { color: green; font-weight: bold; }
+    .fail { color: red; font-weight: bold; }
+    #results { border: 1px solid #ddd; padding: 10px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Brick Breaker Power-Up Tests</h1>
+  <div id="results">Test results will appear here...</div>
+  
+  <!-- Make sure this script tag comes first -->
+  <script>
+    // Set up console logging to page
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "";
+    
+    // Override console methods to display on page
+    const originalLog = console.log;
+    const originalAssert = console.assert;
+    const originalError = console.error;
+    
+    console.log = function(message) {
+      originalLog.apply(console, arguments);
+      resultsDiv.innerHTML += `<div>${message}</div>`;
+    };
+    
+    console.assert = function(condition, message) {
+      if (!condition) {
+        originalAssert.apply(console, arguments);
+        resultsDiv.innerHTML += `<div class="fail">FAILED: ${message}</div>`;
+      }
+    };
+    
+    console.error = function(message) {
+      originalError.apply(console, arguments);
+      resultsDiv.innerHTML += `<div class="fail">${message}</div>`;
+    };
+  </script>
+  
+  <!-- Only load the test script after setting up the console redirects -->
+  <script src="brick_breaker_powerup_test.js"></script>
+</body>
+</html>
