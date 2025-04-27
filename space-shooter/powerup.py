@@ -1,9 +1,9 @@
 # powerup.py
 import pygame
-import random
 from object import Object
 from vector import Vector
 import globals
+import sounds
 
 POWERUP_VIS_RADIUS = 15
 POWERUP_HITBOX_RADIUS = 25
@@ -64,16 +64,22 @@ class PowerUp(Object):
         surface.blit(current_frame, rect)
 
     def activate(self, player):
+        sounds.powerup_sound.play()
+
         if self.type == 'life':
             player.lives += 1
+            sounds.power_life_sound.play()
 
         elif self.type == 'fast_bullets':
             # Increase bullet speed permanently, with a cap
             player.fire_rate = max(player.fire_rate - 0.015, MIN_FIRE_RATE)
+            sounds.power_bullets_sound.play()
 
         elif self.type == 'shield':
             player.shield_timer = POWERUP_DURATION
+            sounds.power_shield_sound.play()
 
         elif self.type == 'shrink':
             player.shrink_timer = POWERUP_DURATION
             player.hitbox.radius = max(3, player.hitbox.radius * 0.5)
+            sounds.power_shrink_sound.play()
