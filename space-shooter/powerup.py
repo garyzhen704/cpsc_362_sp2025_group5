@@ -81,5 +81,4 @@ class PowerUp(Object):
 
         elif self.type == 'shrink':
             player.shrink_timer = POWERUP_DURATION
-            player.hitbox.radius = max(3, player.hitbox.radius * 0.5)
             sounds.power_shrink_sound.play()

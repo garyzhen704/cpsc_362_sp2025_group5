@@ -8,9 +8,16 @@ import globals
 import sounds
 from asteroid import Asteroid
 
-MAX_SPEED = 360  # Pixels per second
-ACCELERATION = 15  # Pixels per second squared
-DECELERATION = 0.5  # Deceleration rate
+BASE_MAX_SPEED = 360  # Pixels per second
+BASE_ACCEL = 15  # Pixels per second squared
+BASE_DECEL = 0.5
+
+SHRUNK_MAX_SPEED = 480
+SHRUNK_ACCEL = 60
+SHRUNK_DECEL = 20
+
+BASE_RADIUS = 8  # Radius of player hitbox
+SHRUNK_RADIUS = 4  # While shrink powerup is active
 
 BASE_FIRE_RATE = 0.17  # In seconds
 MAX_BULLETS = 20
@@ -42,7 +49,7 @@ def get_input_dir() -> Vector:
 
 class Player(Object):
     def __init__(self, pos: Vector):
-        hitbox_radius = 8
+        hitbox_radius = BASE_RADIUS
 
         super().__init__(hitbox_radius, pos, Vector(0, 0), globals.WHITE)
 
@@ -66,8 +73,8 @@ class Player(Object):
         self.shield_image = pygame.image.load("space-shooter/powerups/spr_shield.png").convert_alpha()
         self.shield_timer = 0  # Add if not already present
 
-        self.shrunk = False
         self.ship_scale = 1.0
+        self.shrink_timer = 0
 
 
     def register_hit(self):
@@ -93,11 +100,18 @@ class Player(Object):
         input_dir = get_input_dir()
         throttle_on = input_dir.magnitude() > 0.1
 
+        speed, acceleration, deceleration = BASE_MAX_SPEED, BASE_ACCEL, BASE_DECEL
+        if self.shrink_timer > 0:
+            speed = SHRUNK_MAX_SPEED
+            acceleration = SHRUNK_ACCEL
+            deceleration = SHRUNK_DECEL
+
         # Apply movement
-        target_vel = input_dir * MAX_SPEED
-        self.velocity = self.velocity.moved_toward(target_vel, ACCELERATION if throttle_on else DECELERATION)
+        target_vel = input_dir * speed
+        self.velocity = self.velocity.moved_toward(target_vel, acceleration if throttle_on else deceleration)
         self.apply_velocity(fps)
 
+        # Detect collisions with asteroids
         self.hit_timer += 1 / fps
         if self.hit_timer > DMG_COOLDOWN:
             for obj in globals.game_objects.copy():
@@ -128,19 +142,15 @@ class Player(Object):
             self.shoot()
             self.shoot_timer -= self.fire_rate
 
-        if self.shield_timer > 0:
-            self.shield_timer -= 1 /fps
-        else:
-            self.shield_timer = 0
+        # Decrement timers to 0
+        self.shield_timer = max(self.shield_timer - (1 / fps), 0)
+        self.shrink_timer = max(self.shrink_timer - (1 / fps), 0)
 
-
-        if hasattr(self, 'shrink_timer') and self.shrink_timer > 0:
-            self.ship_scale = 0.5  # Visually scale the ship
-            self.shrink_timer -= 1 / fps
+        if self.shrink_timer > 0:
+            self.hitbox.radius = SHRUNK_RADIUS
         else:
-            self.ship_scale = 1.0
-        if self.ship_scale == 1.0:
-            self.hitbox.radius = 8  # Reset to normal if not shrunk
+            self.hitbox.radius = BASE_RADIUS
+        self.ship_scale = self.hitbox.radius / BASE_RADIUS
 
 
     def shoot(self):
