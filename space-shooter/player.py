@@ -19,11 +19,12 @@ SHRUNK_DECEL = 20
 BASE_RADIUS = 8  # Radius of player hitbox
 SHRUNK_RADIUS = 4  # While shrink powerup is active
 
-BASE_FIRE_RATE = 0.17  # In seconds
+BASE_FIRE_RATE = 0.2  # In seconds
 MAX_BULLETS = 20
 
 DMG_COOLDOWN = 4  # How many seconds the player is invulnerable after taking damage
 TRANSPARENCY = 0.7  # How much transparency to add when in damage cooldown
+MAX_RED_TINT = 70  # 0-255, how much red to apply when at 1 life
 
 def lerp_angle(a, b, t):
     """Linearly interpolate between two angles in degrees."""
@@ -65,10 +66,8 @@ class Player(Object):
         self.fire_rate = BASE_FIRE_RATE
 
         self.hit_timer = DMG_COOLDOWN  # How much time has passed since taking damage
-        self.hits = 0  # Add a counter for hits
-        self.max_hits = 2  # Maximum number of hits before the game ends
         self.game_over = False  # Flag to indicate the game is over
-        self.lives = 2
+        self.lives = 3
 
         self.shield_image = pygame.image.load("space-shooter/powerups/spr_shield.png").convert_alpha()
         self.shield_timer = 0  # Add if not already present
@@ -83,12 +82,17 @@ class Player(Object):
             
         self.hit_timer = 0
         self.lives -= 1
-        self.hits += 1
+
+        if self.lives == 1:
+            sounds.last_life_sound.play(3)
+
         if self.lives == 0:
             sounds.death_sound.play()
             globals.game_over = True
-        if globals.score > globals.high_score:
-            globals.high_score = globals.score
+            if globals.score > globals.high_score:
+                globals.high_score = globals.score
+        else:
+            sounds.hurt_sound.play()
 
 
     def load_frames(self, folder_path):
@@ -187,6 +191,12 @@ class Player(Object):
         # Add transparency while in damage cooldown
         if self.hit_timer < DMG_COOLDOWN:
             rotated_frame.set_alpha(int(255 * TRANSPARENCY))
+
+        # Apply red tint at 1 life
+        if self.lives == 1:
+            red_tint = pygame.Surface(rotated_frame.get_size(), flags=pygame.SRCALPHA)
+            red_tint.fill((MAX_RED_TINT, 0, 0, 0))
+            rotated_frame.blit(red_tint, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
 
         # Center the rotated image
         rect = rotated_frame.get_rect(center=(self.position.x, self.position.y))

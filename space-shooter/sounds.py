@@ -13,6 +13,12 @@ shooting_sound.set_volume(0.06)
 death_sound = pygame.mixer.Sound('space-shooter/sounds/player_death.mp3')
 death_sound.set_volume(0.6)
 
+hurt_sound = pygame.mixer.Sound('space-shooter/sounds/player_dmg.mp3')
+hurt_sound.set_volume(0.4)
+
+last_life_sound = pygame.mixer.Sound('space-shooter/sounds/last_life_alert.mp3')
+last_life_sound.set_volume(0.5)
+
 asteroid_exp_sounds = [
     pygame.mixer.Sound('space-shooter/sounds/asteroid_explode1.mp3'),
     pygame.mixer.Sound('space-shooter/sounds/asteroid_explode2.mp3'),
