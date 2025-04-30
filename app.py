@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, send_from_directory
 from blackjack.app import blackjack_bp  #Blackjack Blueprint
+from space_shooter.routes import spacer_bp
 from flask_socketio import SocketIO
 from blackjack.app import TitleNamespace, ScreenNamespace
 from zmaze.routes.maze_routes import maze_bp  # Import Zmaze Blueprint
@@ -20,6 +21,7 @@ socketio = SocketIO(app)
 app.register_blueprint(blackjack_bp, url_prefix='/blackjack') # Register the Blackjack Blueprint
 app.register_blueprint(maze_bp, url_prefix='/zmaze') # Register the Zmaze Blueprint
 app.register_blueprint(slot_bp, url_prefix='/slotmachine')
+app.register_blueprint(spacer_bp)
 
 socketio.on_namespace(TitleNamespace('/title')) # added
 socketio.on_namespace(ScreenNamespace('/game_screen')) #added
@@ -39,6 +41,7 @@ def flappy_bird():
 @app.route('/zmaze')
 def zmaze():
     return redirect(url_for('maze.maze_page'))  # Redirect to the Zmaze blueprint route
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

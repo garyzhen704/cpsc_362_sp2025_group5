@@ -1,0 +1,21 @@
+[build-system]
+requires = ["pygbag"]
+build-backend = "pygbag"
+
+[project]
+name = "space-shooter"
+version = "0.1.0"
+
+[tool.pygbag]
+main = "main.py"
+assets = ["sounds", "images", "powerups", "frames"]  # Reference your asset folders here
+modules = [
+    "globals", 
+    "object", 
+    "vector", 
+    "player", 
+    "asteroid", 
+    "powerup", 
+    "bullet",
+    "sound"
+]
