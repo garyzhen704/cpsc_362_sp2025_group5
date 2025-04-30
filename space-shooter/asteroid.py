@@ -1,15 +1,15 @@
 import pygame
 import random
 import globals
-import sounds
+import sound
 from object import Object
 from vector import Vector
 
 # Constants
-MIN_SPEED = 300.0
-MAX_SPEED = 600.0
+MIN_SPEED = 900 #300.0
+MAX_SPEED = 1800 #600.0
 PIECE_MAX_ANG_OFFSET = 75.0
-PIECE_SPD_OFFSET = 80.0
+PIECE_SPD_OFFSET = 240 #80.0
 SIZE_PIXEL_RATIO = 50
 MIN_SIZE = 1  # Minimum size for asteroid pieces
 
@@ -20,7 +20,7 @@ class Asteroid(Object):
     @classmethod
     def load_image(cls):
         if cls.asteroid_img is None:
-            cls.asteroid_img = pygame.image.load("space-shooter/asteroid.png").convert_alpha()
+            cls.asteroid_img = pygame.image.load("images/asteroid.png").convert_alpha()
 
     def __init__(self, size: float, pos: Vector, vel: Vector):
         self.__class__.load_image()  # Make sure the image is loaded
@@ -78,7 +78,7 @@ class Asteroid(Object):
         globals.score += 10
         globals.delete_obj(self)
 
-        random.choice(sounds.asteroid_exp_sounds).play()
+        random.choice(sound.asteroid_exp_sounds).play()
 
     def _spawn_piece(self, size, angle):
         vel_add = self.velocity.normalized() * random.uniform(-PIECE_SPD_OFFSET, PIECE_SPD_OFFSET)

@@ -3,11 +3,11 @@ import pygame
 from object import Object
 from vector import Vector
 import globals
-import sounds
+import sound
 
 POWERUP_VIS_RADIUS = 15
 POWERUP_HITBOX_RADIUS = 25
-POWERUP_DURATION = 15  # seconds for temporary effects
+POWERUP_DURATION = 8  # seconds for temporary effects
 MIN_FIRE_RATE = 0.07  # Lowest fire rate possible
 
 class PowerUp(Object):
@@ -34,7 +34,7 @@ class PowerUp(Object):
         # Load the frames from the appropriate directory
         frames = []
         for i in range(1, 7):  # Assuming there are 6 frames per power-up type
-            frame = pygame.image.load(f"space-shooter/powerups/Spnning Orb/{powerup_type}/frame {i}.png").convert_alpha()
+            frame = pygame.image.load(f"powerups/Spnning Orb/{powerup_type}/frame {i}.png").convert_alpha()
             frame = pygame.transform.scale(frame, (POWERUP_VIS_RADIUS * 2, POWERUP_VIS_RADIUS * 2))
         
             frames.append(frame)
@@ -64,21 +64,21 @@ class PowerUp(Object):
         surface.blit(current_frame, rect)
 
     def activate(self, player):
-        sounds.powerup_sound.play()
+        sound.powerup_sound.play()
 
         if self.type == 'life':
             player.lives += 1
-            sounds.power_life_sound.play()
+            sound.power_life_sound.play()
 
         elif self.type == 'fast_bullets':
             # Increase bullet speed permanently, with a cap
             player.fire_rate = max(player.fire_rate - 0.015, MIN_FIRE_RATE)
-            sounds.power_bullets_sound.play()
+            sound.power_bullets_sound.play()
 
         elif self.type == 'shield':
             player.shield_timer = POWERUP_DURATION
-            sounds.power_shield_sound.play()
+            sound.power_shield_sound.play()
 
         elif self.type == 'shrink':
             player.shrink_timer = POWERUP_DURATION
-            sounds.power_shrink_sound.play()
+            sound.power_shrink_sound.play()

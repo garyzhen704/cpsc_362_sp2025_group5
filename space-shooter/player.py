@@ -5,21 +5,21 @@ from object import Object
 from vector import Vector
 from bullet import Bullet  # Import the Bullet class
 import globals
-import sounds
+import sound
 from asteroid import Asteroid
 
-BASE_MAX_SPEED = 360  # Pixels per second
-BASE_ACCEL = 15  # Pixels per second squared
-BASE_DECEL = 0.5
+BASE_MAX_SPEED = 1080#360  # Pixels per second
+BASE_ACCEL = 45 #15  # Pixels per second squared
+BASE_DECEL = 1.5#0.5
 
-SHRUNK_MAX_SPEED = 480
-SHRUNK_ACCEL = 60
-SHRUNK_DECEL = 20
+SHRUNK_MAX_SPEED = 1440#480
+SHRUNK_ACCEL = 180 #60
+SHRUNK_DECEL = 60 #20
 
 BASE_RADIUS = 8  # Radius of player hitbox
 SHRUNK_RADIUS = 4  # While shrink powerup is active
 
-BASE_FIRE_RATE = 0.2  # In seconds
+BASE_FIRE_RATE = 0.065 #0.2  # In seconds
 MAX_BULLETS = 20
 
 DMG_COOLDOWN = 4  # How many seconds the player is invulnerable after taking damage
@@ -54,7 +54,7 @@ class Player(Object):
 
         super().__init__(hitbox_radius, pos, Vector(0, 0), globals.WHITE)
 
-        self.frames = self.load_frames("space-shooter/frames")
+        self.frames = self.load_frames("frames")
         self.current_frame = 0
         self.animation_timer = 0
         self.animation_speed = 0.1
@@ -69,7 +69,7 @@ class Player(Object):
         self.game_over = False  # Flag to indicate the game is over
         self.lives = 3
 
-        self.shield_image = pygame.image.load("space-shooter/powerups/spr_shield.png").convert_alpha()
+        self.shield_image = pygame.image.load("powerups/spr_shield.png").convert_alpha()
         self.shield_timer = 0  # Add if not already present
 
         self.ship_scale = 1.0
@@ -84,15 +84,15 @@ class Player(Object):
         self.lives -= 1
 
         if self.lives == 1:
-            sounds.last_life_sound.play(3)
+            sound.last_life_sound.play(3)
 
         if self.lives == 0:
-            sounds.death_sound.play()
+            sound.death_sound.play()
             globals.game_over = True
             if globals.score > globals.high_score:
                 globals.high_score = globals.score
         else:
-            sounds.hurt_sound.play()
+            sound.hurt_sound.play()
 
 
     def load_frames(self, folder_path):
@@ -171,7 +171,7 @@ class Player(Object):
         bullet = Bullet(self.position + offset, direction, self.velocity, pygame.Color('orange'))
         globals.player_bullets.append(bullet)
         globals.spawn_obj(bullet)
-        sounds.shooting_sound.play()
+        sound.shooting_sound.play()
         print('bullet created')
 
 
