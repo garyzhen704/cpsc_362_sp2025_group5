@@ -6,10 +6,10 @@ from object import Object
 from vector import Vector
 
 # Constants
-MIN_SPEED = 900 #300.0
-MAX_SPEED = 1800 #600.0
+MIN_SPEED = 400.0
+MAX_SPEED = 700.0
 PIECE_MAX_ANG_OFFSET = 75.0
-PIECE_SPD_OFFSET = 240 #80.0
+PIECE_SPD_OFFSET = 80.0
 SIZE_PIXEL_RATIO = 50
 MIN_SIZE = 1  # Minimum size for asteroid pieces
 

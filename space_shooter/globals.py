@@ -11,7 +11,7 @@ best_survival_time = "00:00:000"
 game_over = False
 
 # Frame rate
-FPS = 60
+FPS = 30
 
 # Colors
 BLACK = (0, 0, 0)

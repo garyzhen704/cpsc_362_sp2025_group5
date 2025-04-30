@@ -8,18 +8,18 @@ import globals
 import sound
 from asteroid import Asteroid
 
-BASE_MAX_SPEED = 1080#360  # Pixels per second
-BASE_ACCEL = 45 #15  # Pixels per second squared
-BASE_DECEL = 1.5#0.5
+BASE_MAX_SPEED = 1500#360  # Pixels per second
+BASE_ACCEL = 80  # Pixels per second squared
+BASE_DECEL = 30
 
-SHRUNK_MAX_SPEED = 1440#480
-SHRUNK_ACCEL = 180 #60
-SHRUNK_DECEL = 60 #20
+SHRUNK_MAX_SPEED = 1920#480
+SHRUNK_ACCEL = 180#60
+SHRUNK_DECEL = 60#20
 
 BASE_RADIUS = 8  # Radius of player hitbox
 SHRUNK_RADIUS = 4  # While shrink powerup is active
 
-BASE_FIRE_RATE = 0.065 #0.2  # In seconds
+BASE_FIRE_RATE = 0.12  # In seconds
 MAX_BULLETS = 20
 
 DMG_COOLDOWN = 4  # How many seconds the player is invulnerable after taking damage
@@ -129,7 +129,7 @@ class Player(Object):
             self.target_angle = math.degrees(math.atan2(-input_dir.y, input_dir.x)) - 90
 
         # Smoothly rotate toward target angle
-        self.angle = lerp_angle(self.angle, self.target_angle, 0.15)
+        self.angle = lerp_angle(self.angle, self.target_angle, 0.5)
 
         # Animate spaceship
         self.animation_timer += 1 / fps
