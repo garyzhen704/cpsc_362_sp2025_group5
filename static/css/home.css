@@ -7,8 +7,8 @@
   margin: 0;
   padding: 0;
 }
-html {
-  cursor: url('/images/cursor.cur') 0 0, auto !important;
+html, body, button, a, input, textarea, select {
+  cursor: url('/static/images/cursor.cur') 0 0, auto !important;
 }
 
 body, html {
