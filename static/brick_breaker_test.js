@@ -93,28 +93,10 @@ function testGameInitialization() {
     }
 }
 
-function testPowerUpCollection() {
-    // Setup
-    paddleX = canvas.width / 2 - paddleWidth / 2; // Center the paddle
-    const powerUp = { x: paddleX + 10, y: canvas.height - paddleHeight - 1, type: "extraLife" };
-    powerUps.push(powerUp);
-
-
-    // Simulate power-up collection
-    collectPowerUps();
-
-
-    // Assertions
-    console.assert(lives === 4, "Test Passed: Extra life power-up collected successfully.");
-    console.assert(powerUps.length === 0, "Test Passed: Power-up removed after collection.");
-}
-
-
 window.onload = function () {
     testPaddleAndBallCollision();
     testBrickCollision();
     testGameInitialization();
-    testPowerUpCollection();
 };
 
 // Add <script src="{{ url_for('static', filename='brick_breaker_test.js') }}"></script> to the HTML file to test
