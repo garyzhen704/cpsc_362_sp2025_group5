@@ -12,12 +12,12 @@ resizeCanvas();
 // Game Variables
 let ballRadius = 10;
 let balls = [{ x: canvas.width / 2, y: canvas.height - 30, dx: 4, dy: -4 }];
-const maxBallSpeed = 8;
+const maxBallSpeed = 15;
 
 let paddleHeight = 15;
 let paddleWidth = 150;
 let paddleX = (canvas.width - paddleWidth) / 2;
-let paddleSpeed = 7;
+let paddleSpeed = 12;
 
 let rightPressed = false;
 let leftPressed = false;
@@ -239,7 +239,7 @@ function collectPowerUps() {
                 balls.push({ x: balls[0].x, y: balls[0].y, dx: 4, dy: -4 });
                 score += 5;
             } else if (power.type === "paddleWidth") {
-                paddleWidth += 30;
+                paddleWidth += 50;
                 score += 5;
                 setTimeout(() => {
                     paddleWidth -= 20;
@@ -258,8 +258,14 @@ function collectPowerUps() {
 // Add a gameStarted flag
 let gameStarted = false;
 
+let lastFrameTime = performance.now(); 
+
 // Main Game Loop
 function draw() {
+    const currentFrameTime = performance.now();
+    const deltaTime = (currentFrameTime - lastFrameTime) / 16.67; // Convert to seconds (assuming 60 FPS)
+    lastFrameTime = currentFrameTime;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     balls.forEach(drawBall);
     drawPaddle();
@@ -277,8 +283,9 @@ function draw() {
     } else {
         // Update ball positions
         balls.forEach((ball, ballIndex) => {
-            ball.x += ball.dx;
-            ball.y += ball.dy;
+            
+            ball.x += ball.dx * deltaTime;
+            ball.y += ball.dy * deltaTime;
 
             // Check for wall collisions
             if (ball.x + ball.dx > canvas.width - ballRadius || ball.x + ball.dx < ballRadius) {
@@ -298,8 +305,8 @@ function draw() {
                     let hitAngle = (hitPosition / (paddleWidth / 2)) * (Math.PI / 3);
 
                     // Adjust ball direction based on hit position
-                    ball.dx = 4 * Math.sin(hitAngle);
-                    ball.dy = -Math.abs(4 * Math.cos(hitAngle));
+                    ball.dx = 8 * Math.sin(hitAngle);
+                    ball.dy = -Math.abs(8 * Math.cos(hitAngle));
 
                     // Limit ball speed
                     const speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
@@ -328,9 +335,9 @@ function draw() {
 
     // Paddle movement
     if (rightPressed && paddleX < canvas.width - paddleWidth) {
-        paddleX += paddleSpeed;
+        paddleX += paddleSpeed * deltaTime;
     } else if (leftPressed && paddleX > 0) {
-        paddleX -= paddleSpeed;
+        paddleX -= paddleSpeed * deltaTime;
     }
 
     requestAnimationFrame(draw);
@@ -341,7 +348,7 @@ canvas.addEventListener("click", () => {
     if (!gameStarted) {
         gameStarted = true;
         balls[0].dx = (Math.random() < 0.5 ? -1 : 1) * 4; // Randomize initial horizontal direction
-        balls[0].dy = -4; // Keep the ball moving upward
+        balls[0].dy = -8; // Set initial vertical direction
     }
 });
 
