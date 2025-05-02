@@ -185,6 +185,7 @@ function collisionDetection() {
                             b.status = 0;
                             score++;
 
+                            // Randomly spawn a power-up when a brick is hit
                             if (Math.random() < 0.08) {
                                 spawnPowerUp(b.x + brickWidth / 2, b.y + brickHeight);
                             }
@@ -274,10 +275,12 @@ function draw() {
         balls[0].x = paddleX + paddleWidth / 2;
         balls[0].y = canvas.height - paddleHeight - ballRadius;
     } else {
+        // Update ball positions
         balls.forEach((ball, ballIndex) => {
             ball.x += ball.dx;
             ball.y += ball.dy;
 
+            // Check for wall collisions
             if (ball.x + ball.dx > canvas.width - ballRadius || ball.x + ball.dx < ballRadius) {
                 ball.dx = -ball.dx;
             }
@@ -285,6 +288,7 @@ function draw() {
             if (ball.y + ball.dy < ballRadius) {
                 ball.dy = -ball.dy;
             } else if (ball.y + ball.dy > canvas.height - ballRadius) {
+                // Check for collision with paddle
                 if (
                     ball.x > paddleX &&
                     ball.x < paddleX + paddleWidth &&
@@ -293,9 +297,11 @@ function draw() {
                     let hitPosition = ball.x - (paddleX + paddleWidth / 2);
                     let hitAngle = (hitPosition / (paddleWidth / 2)) * (Math.PI / 3);
 
+                    // Adjust ball direction based on hit position
                     ball.dx = 4 * Math.sin(hitAngle);
                     ball.dy = -Math.abs(4 * Math.cos(hitAngle));
 
+                    // Limit ball speed
                     const speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
                     if (speed > maxBallSpeed) {
                         ball.dx = (ball.dx / speed) * maxBallSpeed;
@@ -320,6 +326,7 @@ function draw() {
         });
     }
 
+    // Paddle movement
     if (rightPressed && paddleX < canvas.width - paddleWidth) {
         paddleX += paddleSpeed;
     } else if (leftPressed && paddleX > 0) {
