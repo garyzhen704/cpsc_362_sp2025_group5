@@ -4,7 +4,7 @@ import os
 spacer_bp = Blueprint('spacer', __name__, url_prefix='/spacer')
 
 # Base path to the web build folder
-BUILD_PATH = os.path.join(os.path.dirname(__file__), 'build', 'web')
+BUILD_PATH = os.path.normpath(os.path.join(os.path.dirname(__file__), 'build', 'web'))
 
 @spacer_bp.route('/', defaults={'path': ''})
 @spacer_bp.route('/<path:path>')
