@@ -104,11 +104,10 @@ class ScreenNamespace(Namespace):
     
         game = active_games[room]
         game_state= active_games[room]['game_system']
-        join_room(room)
+        join_room(room) # Associates Client to a room
         players_data = []
         player_list = active_games[room]['players']
         for player in game_state.players:
-            print('player type:', type(player))
             player_data = {
                 'username': player.name,
                 'user_id': player.playerid,
@@ -124,7 +123,7 @@ class ScreenNamespace(Namespace):
             }
             players_data.append(player_data)
         turn_order = game['turn_order']
-    
+    # broadcast event based on specific room. Takes event function name and a data payload that it will use.
         emit('update_game_state', {'player_bust':False,'player_list_length': len(player_list), 'player_info': players_data, 'all_ready':game['all_ready'], 'turn_order':turn_order, 'socket_ids':active_games[room]['socket_ids'],'endgame':False}, room = room)
 
     def on_disconnect(self):
