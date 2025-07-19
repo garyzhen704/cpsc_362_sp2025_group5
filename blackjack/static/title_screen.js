@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const hostButton = document.getElementById("host_button");
   const joinButton = document.getElementById("join_button");
   const joinCodeButton = document.getElementById("join_code_button");
+  const go_home_btn = document.getElementById("go_home_btn");
  // Get references to buttons
  console.log(hostButton, joinButton, joinCodeButton); 
 
@@ -52,6 +53,11 @@ joinCodeButton.addEventListener("click", function() {
       alert("Both username and room code are required.");
   }
 });
+
+go_home_btn.addEventListener("click", function() {
+    window.location.href = "/";
+});
+
 
 socket.on('render_game',function(data){
     console.log('rendering')
