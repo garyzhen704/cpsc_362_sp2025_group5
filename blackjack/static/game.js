@@ -290,14 +290,19 @@ socket.on('update_game_state', function(data){
           }
           }
         }
-         if(client_player['player_bust'] == true){
-          
-           document.getElementById('result-message1').style.visibility = ''
+        console.log(client_player['player_bust'])
+        console.log(client_player['result'])
+         if(client_player['result'] == 'bust' ){
+          console.log("YOYO")
+            document.getElementById('result-message1').style.visibility = ''
            document.getElementById('hit-button').disabled = true
            document.getElementById('stand-button').disabled = true
            document.getElementById('double-button').disabled = true
-         }else{
            
+           
+         }else{
+
+           console.log("Hiding Result HERE. 1")
            document.getElementById('result-message1').style.visibility = 'hidden'
            document.getElementById('hit-button').disabled = false
            document.getElementById('stand-button').disabled = false
@@ -458,24 +463,14 @@ socket.on('update_balance_results', async function(data){
   // }
   
   console.log('emitting update_endgame')
+  
   socket.emit('update_endgame', {'room':roomCode, 'player_info':players,'player_list_length':data['player_list_length'], 'all_ready':data['all_ready'],'turn_order': data['turn_order'], })
-  console.log('emitted upate_endgame')
-  
-
-  //HUGE BLOCK INCOMING
-  //
-  //
-  
-
-
-
-
-
-  // HUGE BLOCK END
-  //
-  //
+  console.log('emitted update_endgame')
   console.log('result:'+client_player['result'])
-  await new Promise(resolve => setTimeout(resolve, 500));
+  console.log("Going to Wait for 3 seconds")
+  
+  await new Promise(resolve => setTimeout(resolve, 250));
+  console.log("Ended wait.")
 
 if(client_player['result'] =='bust'){
     console.log('in bust')
@@ -510,7 +505,7 @@ if(client_player['result'] =='bust'){
     document.getElementById(`result-message${x+1}`).innerText = 'BUST!'
     document.getElementById(`result-message${x+1}`).style.visibility = 'visible'
 
-    }else if(other_player_listw_dealer[x]['result']== 'winner'){
+    }else if(other_player_listw_dealer[x]['result'] == 'winner'){
       document.getElementById(`result-message${x+1}`).innerText = 'WINNER!'
       document.getElementById(`result-message${x+1}`).style.visibility = 'visible'
     }else if(other_player_listw_dealer[x]['result']== 'blackjack'){
@@ -526,6 +521,7 @@ if(client_player['result'] =='bust'){
   }
   
   console.log('calling end_round')
+  console.log("going to wait for 3 seconds")
   await new Promise(resolve => setTimeout(resolve, 3000));
   
   //remove result screens

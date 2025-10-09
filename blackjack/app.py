@@ -565,7 +565,7 @@ class ScreenNamespace(Namespace):
             if(player_bust == player.playerid):
                 player_data['player_bust']=True
             players_data.append(player_data)
-    
+        print("LOOK HERE", player_data)
         emit('hit-event-client', {'all_ready':gameroom['all_ready'],'room':room, 'player_bust':player_bust, 'player_list_length':len(gameroom['players']), 'player_info':players_data, 'turn_order':gameroom['turn_order'], 'round_over':round_over, 'endgame':False},room=room)
     
     
