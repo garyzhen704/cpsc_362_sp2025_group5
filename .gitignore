@@ -42,3 +42,6 @@ pytest_cache/
 # OS files
 .DS_Store
 Thumbs.db
+
+# But allow this specific one
+!space_shooter/build/
