@@ -1,3 +1,5 @@
+import eventlet
+eventlet.monkey_patch()
 from flask import Flask, render_template, redirect, url_for, send_from_directory
 from blackjack.app import blackjack_bp  #Blackjack Blueprint
 from space_shooter.routes import spacer_bp
