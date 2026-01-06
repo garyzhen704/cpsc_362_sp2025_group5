@@ -98,6 +98,11 @@ class TitleNamespace(Namespace):
 class ScreenNamespace(Namespace):
     def on_connect(self):
         room = request.args.get('room')
+
+        # SAFETY: Ensure the room still exists in the dictionary before accessing it
+        if room not in active_games:
+            print(f"Room {room} already deleted or never existed.")
+            return
         username = request.args.get('username')
         playerid = request.args.get('playerid')
         active_games[room]['socket_ids'][playerid] = request.sid
@@ -142,9 +147,22 @@ class ScreenNamespace(Namespace):
             if player.playerid == playerid:
                 game_system.players.remove(player)
                 current_player = player
+
+
         print(active_games[room]['players'])
-        active_games[room]['players'].remove(player.name)
+         # NEW
+         # Added safety check for .remove()
+        if current_player and current_player.name in active_games[room]['players']:
+            active_games[room]['players'].remove(current_player.name)
         print(active_games[room]['players'])
+
+        # --- THE CLEANUP FIX STARTS HERE ---
+        # If the player list is empty, delete the room and stop
+        if not active_games[room]['players']:
+            print(f"Room {room} is now empty. Deleting instance.")
+            del active_games[room]
+            return 
+        # --- THE CLEANUP FIX ENDS HERE ---
 
         for player in game_system.players:
             print(player.name)
