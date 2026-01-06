@@ -1,6 +1,6 @@
 # Fullerton Funhouse 
 
-## A fun place to play web games.
+## Designed with the intention of creating a fun place to play web games.
 Player here at https://fullertonfunhouse.onrender.com
 
 <img width="1393" height="813" alt="Screenshot 2026-01-06 at 3 04 20 PM" src="https://github.com/user-attachments/assets/fe89cc5f-e2eb-4a8d-b938-3d96f53303be" />
@@ -10,7 +10,7 @@ Player here at https://fullertonfunhouse.onrender.com
 ## Project Description:
 This project is all about creating fun and easy-to-play web games for all audiences. 
 
-## Features
+## Featured Games
 1. BlackJack
 2. BrickBreaker
 3. ZMaze
