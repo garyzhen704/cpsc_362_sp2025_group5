@@ -1,19 +1,22 @@
-# Fullerton Funhouse Blackjack Game
+# Fullerton Funhouse 
 
-## Subtitle: A fun, modern video game version of the classic card game Blackjack.
+## Designed with the intention of creating a fun place to play web games.
+Play here at https://fullertonfunhouse.onrender.com
+
+<img width="1393" height="813" alt="Screenshot 2026-01-06 at 3 04 20 PM" src="https://github.com/user-attachments/assets/fe89cc5f-e2eb-4a8d-b938-3d96f53303be" />
+
+
 
 ## Project Description:
-This project is all about creating a fun and easy-to-play video game version of Blackjack. We'll start by building the Blackjack game and then make it better based on what players like. Our aim is to make a game that's exciting and simple to update.
+This project is all about creating fun and easy-to-play web games for all audiences. 
 
-Below is a UML sequence diagram that shows how the Blackjack game works. It explains the steps from dealing the cards to finding out who wins.
-
-*UML class diagram*
-![UML Sequence Diagram for Blackjack](images/blackjack_sequence_diagram.png)
-
-- The Dealer deals one card face up to both the Player and themselves, followed by a second face-up card to the Player and a face-down card to themselves.  
-- The Player’s turn begins, where they can request additional cards (hit) until they choose to stand or bust (exceed a total of 21, resulting in a loss of their bet).  
-- If the Player stands, the Dealer reveals their hidden card and draws cards until their total is 17 or higher.  
-- The game concludes with outcomes: if the Dealer busts (total > 21), remaining players win; if the Dealer’s total is 21 or higher, the Dealer wins. Postconditions state that card values are known, hands are dealt, and a winner is decided.
+## Featured Games
+1. BlackJack
+2. BrickBreaker
+3. ZMaze
+4. The classic FlappyBird
+5. Slot machine game
+6. Spacer - an asteroid dodge shooter 
 
 ## StyleGuide:
 **Linter:** Pylint for Python  
