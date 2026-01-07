@@ -132,62 +132,91 @@ class ScreenNamespace(Namespace):
         emit('update_game_state', {'player_bust':False,'player_list_length': len(player_list), 'player_info': players_data, 'all_ready':game['all_ready'], 'turn_order':turn_order, 'socket_ids':active_games[room]['socket_ids'],'endgame':False}, room = room)
 
     def on_disconnect(self):
-        print('doing nothing')
-        
-        print('Screen page disconnected')
         room = request.args.get('room')
-        username = request.args.get('username')
-        
-        game_system = active_games[room]['game_system']
         playerid = request.args.get('playerid')
-        current_player = None
-        players_data = []
-
-        for player in game_system.players:
-            if player.playerid == playerid:
-                game_system.players.remove(player)
-                current_player = player
-
-
-        print(active_games[room]['players'])
-         # NEW
-         # Added safety check for .remove()
-        if current_player and current_player.name in active_games[room]['players']:
-            active_games[room]['players'].remove(current_player.name)
-        print(active_games[room]['players'])
-
-        # --- THE CLEANUP FIX STARTS HERE ---
-        # If the player list is empty, delete the room and stop
-        if not active_games[room]['players']:
-            print(f"Room {room} is now empty. Deleting instance.")
-            del active_games[room]
-            return 
-        # --- THE CLEANUP FIX ENDS HERE ---
-
-        for player in game_system.players:
-            print(player.name)
         
+        if room not in active_games:
+            return
+
+        game_dict = active_games[room]
+        game_system = game_dict['game_system']
+        
+        leaver = next((p for p in game_system.players if p.playerid == playerid), None)
+        
+        if leaver:
+            # If it's their turn, pass it BEFORE removing them
+            if leaver.turn and game_dict['all_ready']:
+                leaver_index = game_system.players.index(leaver)
+                if leaver_index == len(game_system.players) - 1:
+                    game_system.players[0].turn = True
+                else:
+                    game_system.players[leaver_index + 1].turn = True
+
+            # Remove them from the system
+            game_system.players.remove(leaver)
+            if leaver.name in game_dict['players']:
+                game_dict['players'].remove(leaver.name)
+
+        # Check if the room is now empty
+        if not game_dict['players']:
+            print(f"Room {room} empty. Deleting.")
+            del active_games[room]
+            return
+
+        # --- NEW: PRE-ROUND READY CHECK ---
+        # If a player leaves BEFORE the round starts, check if everyone left is ready
+        if not game_dict['all_ready']:
+            all_players_ready = True
+            # We need at least 1 human player (dealer is index 0)
+            if len(game_system.players) > 1:
+                for player in game_system.players:
+                    if player.name == 'dealer':
+                        continue
+                    if player.status != 'ready':
+                        all_players_ready = False
+                        break
+                
+                # If everyone left is ready, force start the game
+                if all_players_ready:
+                    game_system.startGame()
+                    game_system.players[0].hand.cards[0].is_face_down = True
+                    game_system.players[1].turn = True
+                    game_dict['all_ready'] = True
+        # --- END NEW LOGIC ---
+
+        # Reassign 'is_last'
+        if len(game_system.players) > 1:
+            for p in game_system.players: p.islast = False 
+            game_system.players[-1].islast = True 
+
+        # Broadcast updated state
+        players_data = []
         for player in game_system.players:
-            print('player type:', type(player))
             player_data = {
                 'username': player.name,
                 'user_id': player.playerid,
                 'hand': [card.to_dict() for card in player.hand.cards],
-                'player_status':player.status,
+                'player_status': player.status,
                 'balance': player.balance,
                 'current_bet': player.currentBet,
-                'double_down':player.canDoubleDown(player.hand),
-                'player_bust':player.busted,
-                'player_turn':player.turn,
-                'result':player.result,
-                'is_last':player.islast
+                'double_down': player.canDoubleDown(player.hand),
+                'player_bust': player.busted,
+                'player_turn': player.turn,
+                'result': player.result,
+                'is_last': player.islast 
             }
             players_data.append(player_data)
-        player_list = active_games[room]['players']
+
+        emit('update_game_state', {
+            'player_list_length': len(game_dict['players']),
+            'player_info': players_data, 
+            'all_ready': game_dict['all_ready'], # This will now be True if start was triggered
+            'turn_order': game_dict['turn_order'],
+            'socket_ids': game_dict['socket_ids'],
+            'endgame': False
+        }, room=room)
+        
         leave_room(room)
-
-        emit('update_game_state',{'leaverID':current_player.playerid,'player_list_length': len(player_list),'turn_order':active_games[room]['turn_order'],'player_info': players_data, 'all_ready':active_games[room]['all_ready'], 'endgame':False}, room = room)
-
         
 
 
